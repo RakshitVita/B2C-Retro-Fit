@@ -1,10 +1,12 @@
-import React, { useState, useRef } from "react";
+
+import React, { useState, useRef,useEffect} from "react";
 import Maincontainer from "../Maincontainer";
 import "./Mainpage.css";
 import tickIcon from "./mainpage_Assets/checkmark.png";
 import { RiLoader2Line } from "react-icons/ri";
 import downloadIcon from "./mainpage_Assets/download.png";
 import { jsPDF } from "jspdf";
+import useUserStore from '../../../Zustand_State/UserStore.js';
 
 const Mainpage = () => {
   const [fileType, setFileType] = useState("Sql");
@@ -12,10 +14,71 @@ const Mainpage = () => {
   const [isConverting, setIsConverting] = useState(false);
   const [isConverted, setIsConverted] = useState(false);
   const fileInputRef = useRef(null);
+  const [languagelimiterror, setLanguagelimiterror] = useState(false);
+  const [formatError, setFormatError] = useState('')
+
+  const {validateFileUpload, lineLimitError,isPremium,fetchUserStatus,setLineLimitError}=useUserStore();
+
+  useEffect(() => {
+    fetchUserStatus(); // optional if already called globally
+  }, []);
+
+  
+
+  const allowedExtensions = {
+  Sql: ['.sql', '.txt'],
+  JavaScript: ['.js'],
+  Python: ['.py'],
+  Java: ['.java'],
+  };
+
+  const isValidExtension = (fileName, language) => {
+  const ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+  return allowedExtensions[language]?.includes(ext);
+  };
+
+const processFileUpload = async (file) => {
+  //reset all errors before
+  setFormatError('');
+  setLanguagelimiterror(false);
+  setLineLimitError(false);
+  if (!file) return;
+
+  // Block non-premium users from using other than SQL
+  if (!isPremium && fileType !== 'Sql') {
+    setLanguagelimiterror(true);
+    setFormatError('');
+    setFile(null);
+    return;
+  }
+
+  // Format validation
+  if (!isValidExtension(file.name, fileType)) {
+    setFormatError(`Invalid file format. Expected ${allowedExtensions[fileType].join(', ')}`);
+    setLanguagelimiterror(false);
+    setFile(null);
+    return;
+  }
+
+  // For free users, check line limit only for SQL
+  if (!isPremium && fileType === 'Sql') {
+    const isAllowed = await validateFileUpload(file); // This will internally check for <= 400 lines
+    if (!isAllowed) {
+      setFormatError('');
+      setFile(null);
+      return;
+    }
+  }
+
+  // All validations passed
+  setFile(file);
+  setFormatError('');
+  setLanguagelimiterror(false);
+};
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
-    setFile(uploadedFile);
+    processFileUpload(uploaded
     setIsConverted(false);
     setIsConverting(true);
 
@@ -31,10 +94,10 @@ const Mainpage = () => {
   };
 
   const handleDrop = (e) => {
-    e.preventDefault();
-    const droppedFile = e.dataTransfer.files[0];
-    setFile(droppedFile);
-    setIsConverted(false);
+  e.preventDefault();
+  const droppedFile = e.dataTransfer.files[0];
+  processFileUpload(droppedFile);
+        setIsConverted(false);
     setIsConverting(true);
 
     // Reset file input value so dialog closes
@@ -50,7 +113,23 @@ const Mainpage = () => {
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    };
+  const handleFiletypeChange =(e)=>{
+    //resetting all errors first
+      setFormatError('');
+  setLanguagelimiterror(false);
+  setLineLimitError(false);
+    const selected=e.target.value;
+
+    setFileType(selected);
+    if(!isPremium && selected !== 'Sql'){
+      setLanguagelimiterror(true);
+    }
+    else{
+      setLanguagelimiterror(false)
+    }
   };
+
 
   const handleDownload = () => {
   if (!file) return;
@@ -73,7 +152,10 @@ const Mainpage = () => {
   reader.readAsText(file);
 };
 
+
+  
   return (
+    <>
     <div className="upload-container">
       <h2>CONVERT CODE TO DOCUMENT</h2>
       <p className="description">
@@ -89,7 +171,7 @@ const Mainpage = () => {
         <select
           id="fileType"
           value={fileType}
-          onChange={(e) => setFileType(e.target.value)}
+          onChange={handleFiletypeChange}
         >
           <option value="Sql">Sql</option>
           <option value="JavaScript">JavaScript</option>
@@ -98,10 +180,8 @@ const Mainpage = () => {
         </select>
       </div>
 
-      {/* Responsive upload area */}
-      <label
-        htmlFor="fileUpload"
-        className="upload-area"
+      <div
+        className={`upload-area ${!isPremium && fileType !== 'Sql' ? 'disabled-upload' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         tabIndex={0}
@@ -142,7 +222,18 @@ const Mainpage = () => {
           ref={fileInputRef}
           style={{ display: "none" }}
         />
-      </label>
+        <p className="file-info">Zip, .txt, .png (max: 10MB). Up to 400 lines of code allowed.</p>
+      </div>
+      {/*Line Limit error*/}
+      {lineLimitError &&<p className='error-text'> {lineLimitError} </p>}
+      {/* format Error */}
+      {formatError && <p className="error-text">{formatError}</p>}
+              {/* Error message if restricted */}
+        {languagelimiterror && (
+          <p style={{ color: 'red', marginTop: '8px' }}>
+            Free version only supports SQL conversion. Upgrade to use other languages.
+          </p>
+        )}
 
       {file && (
         <div className="status-container">
@@ -192,7 +283,14 @@ const Mainpage = () => {
         </div>
       )}
     </div>
+
+
+
+        
+    
+    </>
   );
 };
 
 export default Mainpage;
+

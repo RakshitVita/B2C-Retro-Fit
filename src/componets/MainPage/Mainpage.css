@@ -55,6 +55,8 @@ select {
   max-width: 520px;
   min-width: 220px;
   min-height: 60px;
+  height: 150px;
+
   border: 2px dashed #377dff;
   border-radius: 10px;
   background-color: #f9f9f9;
@@ -63,6 +65,7 @@ select {
   box-sizing: border-box;
   overflow-x: auto;
 }
+
 
 .upload-inline {
   display: inline;
@@ -74,6 +77,18 @@ select {
 
 .file-input {
   display: none;
+  
+.disabled-upload {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-label {
+  display: block;
+  cursor: pointer;
+  color: #333;
+
 }
 
 .upload-icon {
@@ -110,6 +125,7 @@ select {
   color: #444;
   font-weight: bold;
 }
+
 
 .status-container {
   margin-top: 25px;
@@ -205,4 +221,10 @@ select {
   .upload-inline {
     font-size: 14px;
   }
+
+.error-text {
+  color: red;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+
 }
