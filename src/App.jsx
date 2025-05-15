@@ -7,10 +7,27 @@ import Download from "./componets/Download";
 import Subscription_section from "./componets/Subscription_section";
 
 function App() {
+    const notifications = [
+    "New file downloaded",
+    "Subscription renewed",
+    "Profile updated",
+    "Security alert",
+  ];
+  const filenumber = 2;
+
+  const profileFields = [{ label: "Username", value: "johndoe" },
+    { label: "Password", value: "********" },
+  ];
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        <Navbar />
+            <Navbar
+      notifications={notifications}
+      profileFields={profileFields}
+      filenumber={filenumber}
+      avatar="/assets/profile.jpg"
+    
+    />
         <main className="flex justify-center items-center p-4">
           <Routes>
             <Route path="/" element={<Mainpage/>} />
@@ -24,3 +41,6 @@ function App() {
 }
 
 export default App
+
+
+
