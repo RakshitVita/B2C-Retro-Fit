@@ -3,7 +3,7 @@ import Maincontainer from './Maincontainer'
 const Mainpage = () => {
   return (
     <>
-  <Maincontainer>Mainpage by ronit</Maincontainer>
+  <Maincontainer>Mainpage by ronit and Rakshit</Maincontainer>
         
     
     </>

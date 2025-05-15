@@ -2,7 +2,7 @@ import React from "react";
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './componets/Navbar'
-import Mainpage from "./componets/Mainpage";
+import Mainpage from "./componets/MainPage/Mainpage";
 import Download from "./componets/Download";
 import Subscription_section from "./componets/Subscription_section";
 
