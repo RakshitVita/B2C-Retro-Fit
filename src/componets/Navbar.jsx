@@ -10,7 +10,7 @@ const Navbar = () => {
         <a href="/subscriptions">Subscriptions</a>
       </div>
       <button className="bg-blue-500 text-white px-4 py-1 text-sm rounded">
-        Try 1/4 SQL Code Conversions for Free
+        i m ganesh
       </button>
     </nav>
 </>
