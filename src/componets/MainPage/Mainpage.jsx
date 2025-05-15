@@ -78,7 +78,7 @@ const processFileUpload = async (file) => {
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
-    processFileUpload(uploaded
+    processFileUpload(uploadedFile);
     setIsConverted(false);
     setIsConverting(true);
 
@@ -180,7 +180,7 @@ const processFileUpload = async (file) => {
         </select>
       </div>
 
-      <div
+      <label
         className={`upload-area ${!isPremium && fileType !== 'Sql' ? 'disabled-upload' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -223,7 +223,7 @@ const processFileUpload = async (file) => {
           style={{ display: "none" }}
         />
         <p className="file-info">Zip, .txt, .png (max: 10MB). Up to 400 lines of code allowed.</p>
-      </div>
+      </label>
       {/*Line Limit error*/}
       {lineLimitError &&<p className='error-text'> {lineLimitError} </p>}
       {/* format Error */}

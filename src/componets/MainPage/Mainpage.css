@@ -77,8 +77,8 @@ select {
 
 .file-input {
   display: none;
-  
-.disabled-upload {
+}
+  .disabled-upload {
   pointer-events: none;
   opacity: 0.6;
   cursor: not-allowed;
@@ -221,10 +221,11 @@ select {
   .upload-inline {
     font-size: 14px;
   }
-
+}
 .error-text {
   color: red;
   margin-top: 0.5rem;
   font-size: 0.875rem;
+
 
 }
