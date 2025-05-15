@@ -4,7 +4,7 @@ import Maincontainer from './Maincontainer'
 const Download = () => {
   return (
     <>
-    <Maincontainer>Download Section</Maincontainer>
+    <Maincontainer>i ma yadnya</Maincontainer>
     </>
   )
 }
