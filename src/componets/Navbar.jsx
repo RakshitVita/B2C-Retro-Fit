@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from "react";  
 import { Link } from "react-router-dom";
-import { FaBell } from "react-icons/fa";
+import { FaBell } from "react-icons/fa";  //for notification icons
 import "./Navbar.css";
 
 const Navbar = ({
@@ -20,7 +20,7 @@ const Navbar = ({
     <nav className="navbar">
       {/* Logo */}
       <div className="logo">
-  <img src="/assets/logo.jpg" alt="logo" />
+  <img src="/assets/logo.png" alt="logo" />
   <b>RETRO FIT</b>
 
 </div>
