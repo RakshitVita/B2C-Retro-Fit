@@ -2,7 +2,7 @@ import React from 'react'
 
 const Subscription_section = () => {
   return (
-    <div>Subscription_section</div>
+    <div>I am manthan</div>
   )
 }
 
