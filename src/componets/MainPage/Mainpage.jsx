@@ -10,13 +10,12 @@ import useUserStore from '../../../Zustand_State/UserStore.js';
 const Mainpage = () => {
   const [fileType, setFileType] = useState("Sql");
   const [file, setFile] = useState(null);
-  const [isConverting, setIsConverting] = useState(false);
   const [isConverted, setIsConverted] = useState(false);
   const fileInputRef = useRef(null);
   const [languagelimiterror, setLanguagelimiterror] = useState(false);
   const [formatError, setFormatError] = useState('')
 
-  const {validateFileUpload, lineLimitError,isPremium,fetchUserStatus,setLineLimitError,convertFile,convertedFile,isLoading}=useUserStore();
+  const {validateFileUpload, lineLimitError,isPremium,fetchUserStatus,setLineLimitError,convertFile,convertedFile,isLoading, setIsLoading}=useUserStore();
 
   useEffect(() => {
     fetchUserStatus(); // optional if already called globally
@@ -79,16 +78,16 @@ const processFileUpload = async (file) => {
     const uploadedFile = e.target.files[0];
     processFileUpload(uploadedFile);
     setIsConverted(false);
-    setIsConverting(true);
+    setIsLoading(true);
 
 const passedValidation = await processFileUpload(uploadedFile);
   if (!passedValidation) {
-    setIsConverting(false);
+    setIsLoading(false);
     return;
   }
 
   await convertFile(uploadedFile, fileType);
-  setIsConverting(false);
+  setIsLoading(false);
   setIsConverted(true);
 
   if (fileInputRef.current) fileInputRef.current.value = "";
@@ -99,7 +98,7 @@ const passedValidation = await processFileUpload(uploadedFile);
   const droppedFile = e.dataTransfer.files[0];
   processFileUpload(droppedFile);
         setIsConverted(false);
-    setIsConverting(true);
+    setIsLoading(true);
 
     // Reset file input value so dialog closes
     if (fileInputRef.current) {
@@ -107,7 +106,7 @@ const passedValidation = await processFileUpload(uploadedFile);
     }
 
     setTimeout(() => {
-      setIsConverting(false);
+      setIsLoading(false);
       setIsConverted(true);
     }, 3000);
   };
@@ -121,7 +120,7 @@ const passedValidation = await processFileUpload(uploadedFile);
   setLanguagelimiterror(false);
   setLineLimitError(false);
   setFile(null);
-
+  setIsLoading(false);
 
     const selected=e.target.value;
 
@@ -229,7 +228,7 @@ const handleDownload = () => {
   <div className="status-container">
     <span className="file-name">{file.name}</span>
     <span className={`status ${isConverted ? "converted" : "converting"}`}>
-      {isConverting || isLoading ? (
+      {isLoading ? (
         <>
           <RiLoader2Line className="rotating" size={20} color="#0b3d91" />
           &nbsp;Converting...

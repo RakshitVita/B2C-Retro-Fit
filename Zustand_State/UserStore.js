@@ -2,10 +2,11 @@ import { create } from 'zustand';
 import { axiosInstance } from '../AxiosInstance/axios_instance';
 
 const useUserStore = create((set) => ({
-  isPremium: true,
+  isPremium: false,
   isLoading: true,
   error: null ,
   lineLimitError: '',
+  setIsLoading: (value) => set({ isLoading: value }),
   setLineLimitError: (msg) => set({ lineLimitError: msg }),
 
 
@@ -58,16 +59,13 @@ const useUserStore = create((set) => ({
     formData.append('language', language);
 
       try {
-        // const response = await axiosInstance.post('/api/convert-file', formData, {
-        //   responseType: 'blob', // if file comes as PDF or similar
-        // });
-        // const blob = new Blob([response.data], { type: response.headers['content-type'] });
-
-        const dummyContent = '%PDF-1.4\n%âãÏÓ\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n...';
-const dummyBlob = new Blob([dummyContent], { type: 'application/pdf' });
+        const response = await axiosInstance.post('/api/convert-file', formData, {
+          responseType: 'blob', // if file comes as PDF or similar
+        });
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
 
-        set({ convertedFile: dummyBlob, isLoading: false });
+        set({ convertedFile: blob, isLoading: false });
       } catch (error) {
         console.error('Conversion failed:', error);
         set({ error: 'File conversion failed', isLoading: false });
