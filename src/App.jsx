@@ -15,9 +15,10 @@ const App = () => {
   ];
 
   const profileFields = [
+    { label: "Avatar", value: "/assets/profile.jpg" },
     { label: "Name", value: "Jane Doe" },
-    { label: "Email", value: "jane@example.com" },
-    { label: "Avatar", value: "/assets/profile.jpg" }
+    { label: "Email", value: "jane@example.com" }
+    
   ];
 
   const filenumber = 3;
