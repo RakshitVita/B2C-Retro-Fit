@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Subscription_section.scss';
+import Maincontainer from '../Maincontainer';
 
 //multiple plan cards objects
 const plans = [
@@ -61,46 +62,48 @@ const SubscriptionSection = () => {
   const getPrice = (plan) => billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;  //returns price according monthly or yearly
 
   return (
-    <div className="subscription-container">
-      <h2>Simple, transparent pricing</h2>
-      <p>No contracts. No surprise fees.</p>
-      
-      <div className="toggle-switch">
-        <button 
-          className={billingCycle === 'monthly' ? 'active' : ''}
-          onClick={() => setBillingCycle('monthly')}
-        >
-          Monthly
-        </button>
-        <button 
-          className={billingCycle === 'yearly' ? 'active' : ''}
-          onClick={() => setBillingCycle('yearly')}
-        >
-          Yearly
-        </button>
-      </div>
+    <Maincontainer>
+      <div className="subscription-container">
+        <h2>Simple, transparent pricing</h2>
+        <p>No contracts. No surprise fees.</p>
 
-      <div className="card-wrapper">
-        {plans.map((plan) => (
-          <div
-            key={plan.name}
-            className={`plan-card ${plan.name === activePlan ? 'active' : ''} ${plan.mostPopular ? 'most-popular' : ''}`}
-            onClick={() => setActivePlan(plan.name)}
+        <div className="toggle-switch">
+          <button
+            className={billingCycle === 'monthly' ? 'active' : ''}
+            onClick={() => setBillingCycle('monthly')}
           >
-            {plan.mostPopular && <div className="badge">MOST POPULAR</div>}
-            <h3>${getPrice(plan)} <span>/ {billingCycle}</span></h3>
-            <h4>{plan.name}</h4>
-            <p>For most businesses that want to optimize web queries</p>
-            <ul>
-              {plan.features.map((feature, i) => (
-                <li key={i}>✔ {feature}</li>
-              ))}
-            </ul>
-            <button className="choose-btn">Choose plan</button>
-          </div>
-        ))}
+            Monthly
+          </button>
+          <button
+            className={billingCycle === 'yearly' ? 'active' : ''}
+            onClick={() => setBillingCycle('yearly')}
+          >
+            Yearly
+          </button>
+        </div>
+
+        <div className="card-wrapper">
+          {plans.map((plan) => (
+            <div
+              key={plan.name}
+              className={`plan-card ${plan.name === activePlan ? 'active' : ''} ${plan.mostPopular ? 'most-popular' : ''}`}
+              onClick={() => setActivePlan(plan.name)}
+            >
+              {plan.mostPopular && <div className="badge">MOST POPULAR</div>}
+              <h3>${getPrice(plan)} <span>/ {billingCycle}</span></h3>
+              <h4>{plan.name}</h4>
+              <p>For most businesses that want to optimize web queries</p>
+              <ul>
+                {plan.features.map((feature, i) => (
+                  <li key={i}>✔ {feature}</li>
+                ))}
+              </ul>
+              <button className="choose-btn">Choose plan</button>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </Maincontainer>
   );
 };
 
