@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from './componets/Navbar'
 import Mainpage from "./componets/Mainpage";
 import Download from "./componets/Download";
-import Subscription_section from "./componets/Subscription_section";
+import Subscription_section from "./componets/Subscription/Subscription_section";
 
 function App() {
   return (
