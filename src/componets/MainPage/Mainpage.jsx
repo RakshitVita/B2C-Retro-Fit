@@ -16,7 +16,7 @@ const Mainpage = () => {
   const [languagelimiterror, setLanguagelimiterror] = useState(false);
   const [formatError, setFormatError] = useState('')
 
-  const {validateFileUpload, lineLimitError,isPremium,fetchUserStatus,setLineLimitError}=useUserStore();
+  const {validateFileUpload, lineLimitError,isPremium,fetchUserStatus,setLineLimitError,convertFile,convertedFile,isLoading}=useUserStore();
 
   useEffect(() => {
     fetchUserStatus(); // optional if already called globally
@@ -41,7 +41,7 @@ const processFileUpload = async (file) => {
   setFormatError('');
   setLanguagelimiterror(false);
   setLineLimitError(false);
-  if (!file) return;
+  if (!file) return false;
 
   // Block non-premium users from using other than SQL
   if (!isPremium && fileType !== 'Sql') {
@@ -75,21 +75,23 @@ const processFileUpload = async (file) => {
   setLanguagelimiterror(false);
 };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const uploadedFile = e.target.files[0];
     processFileUpload(uploadedFile);
     setIsConverted(false);
     setIsConverting(true);
 
-    // Always reset input value after use
-  if (fileInputRef.current) {
-    fileInputRef.current.value = "";
+const passedValidation = await processFileUpload(uploadedFile);
+  if (!passedValidation) {
+    setIsConverting(false);
+    return;
   }
 
-    setTimeout(() => {
-      setIsConverting(false);
-      setIsConverted(true);
-    }, 3000);
+  await convertFile(uploadedFile, fileType);
+  setIsConverting(false);
+  setIsConverted(true);
+
+  if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleDrop = (e) => {
@@ -115,9 +117,12 @@ const processFileUpload = async (file) => {
     };
   const handleFiletypeChange =(e)=>{
     //resetting all errors first
-      setFormatError('');
+  setFormatError('');
   setLanguagelimiterror(false);
   setLineLimitError(false);
+  setFile(null);
+
+
     const selected=e.target.value;
 
     setFileType(selected);
@@ -130,25 +135,16 @@ const processFileUpload = async (file) => {
   };
 
 
-  const handleDownload = () => {
-  if (!file) return;
+const handleDownload = () => {
+  if (!convertedFile) return;
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const content = e.target.result;
-
-    // Create a new PDF document
-    const doc = new jsPDF();
-
-    // Add the file content to the PDF (split into lines for long text)
-    const lines = doc.splitTextToSize(content, 180);
-    doc.text(lines, 10, 10);
-
-    // Save the PDF
-    doc.save(`${file.name.replace(/\.[^/.]+$/, "")}.pdf`);
-  };
-
-  reader.readAsText(file);
+  const url = window.URL.createObjectURL(convertedFile);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${file.name.replace(/\.[^/.]+$/, "")}_converted.pdf`; // adjust based on backend
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 
@@ -229,53 +225,29 @@ const processFileUpload = async (file) => {
           </p>
         )}
 
-      {file && (
-        <div className="status-container">
-          <span className="file-name">{file.name}</span>
-          <span
-            className={`status ${isConverted ? "converted" : "converting"}`}
-          >
-            {isConverting && (
-              <>
-                <RiLoader2Line className="rotating" size={20} color="#0b3d91" />
-                &nbsp;Converting...
-              </>
-            )}
-            {isConverted && (
-              <>
-                <img
-                  src={tickIcon}
-                  alt="Converted"
-                  style={{
-                    width: "18px",
-                    height: "18px",
-                    marginRight: "5px",
-                    verticalAlign: "middle",
-                  }}
-                />
-                Converted
-              </>
-            )}
-          </span>
-          {isConverted && (
-            <button
-              className="download-btn"
-              onClick={handleDownload}
-              title="Download"
-            >
-              <img
-                src={downloadIcon}
-                alt="Download"
-                style={{
-                  width: "26px",
-                  height: "26px",
-                  verticalAlign: "middle",
-                }}
-              />
-            </button>
-          )}
-        </div>
-      )}
+{file && (
+  <div className="status-container">
+    <span className="file-name">{file.name}</span>
+    <span className={`status ${isConverted ? "converted" : "converting"}`}>
+      {isConverting || isLoading ? (
+        <>
+          <RiLoader2Line className="rotating" size={20} color="#0b3d91" />
+          &nbsp;Converting...
+        </>
+      ) : isConverted && convertedFile ? (
+        <>
+          <img src={tickIcon} alt="Converted" className="tick-icon" />
+          Converted
+        </>
+      ) : null}
+    </span>
+    {convertedFile && isConverted && (
+      <button className="download-btn" onClick={handleDownload} title="Download">
+        <img src={downloadIcon} alt="Download" style={{ width: "26px", height: "26px" }} />
+      </button>
+    )}
+  </div>
+)}
     </div>  
     </>
   );
