@@ -77,8 +77,10 @@ select {
 
 .file-input {
   display: none;
+  color: "#888";           
+  font-size: "11px",
 }
-  .disabled-upload {
+.disabled-upload {
   pointer-events: none;
   opacity: 0.6;
   cursor: not-allowed;

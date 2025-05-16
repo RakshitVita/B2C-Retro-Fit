@@ -14,7 +14,7 @@ const useUserStore = create((set) => ({
     try {
       const response = await axiosInstance.get('/user/status'); // replace with your endpoint
       const isPremium = response.data?.isPremium || false;
-      set({ isPremium, isLoading: false });
+      set({ isPremium });
     } catch (err) {
       console.error('Failed to fetch user status:', err);
       set({ error: 'Failed to fetch user status', isLoading: false });

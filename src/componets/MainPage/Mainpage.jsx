@@ -1,6 +1,5 @@
 
 import React, { useState, useRef,useEffect} from "react";
-import Maincontainer from "../Maincontainer";
 import "./Mainpage.css";
 import tickIcon from "./mainpage_Assets/checkmark.png";
 import { RiLoader2Line } from "react-icons/ri";
@@ -204,11 +203,6 @@ const processFileUpload = async (file) => {
           or Drag and Drop File or Image.
           <span
             className="file-info"
-            style={{
-              color: "#888",
-              marginLeft: "6px",
-              fontSize: "13px",
-            }}
           >
             Zip, .txt, .png (max: 10MB). Up to 400 lines of code allowed.
           </span>
@@ -282,12 +276,7 @@ const processFileUpload = async (file) => {
           )}
         </div>
       )}
-    </div>
-
-
-
-        
-    
+    </div>  
     </>
   );
 };
