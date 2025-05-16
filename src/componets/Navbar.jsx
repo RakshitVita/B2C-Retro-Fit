@@ -1,12 +1,12 @@
+
 import React, { useEffect } from "react";  
 import { Link } from "react-router-dom";
-import { FaBell } from "react-icons/fa";  //for notification icons
+import { FaBell } from "react-icons/fa";
 import "./Navbar.css";
 
 const Navbar = ({
   notifications = [],
   profileFields = [],
-  avatar = "https://via.placeholder.com/36",
   filenumber,
 }) => {
   useEffect(() => {
@@ -14,16 +14,18 @@ const Navbar = ({
       alert("You have exceeded your 4 free SQL code conversions.");
     }
   }, [filenumber]);
-  
+
+  // Get avatar from profileFields
+  const avatarField = profileFields.find(field => field.label.toLowerCase() === "avatar");
+  const avatar = avatarField?.value || "https://via.placeholder.com/36";
 
   return (
     <nav className="navbar">
       {/* Logo */}
       <div className="logo">
-  <img src="/assets/logo.png" alt="logo" />
-  <b>RETRO FIT</b>
-
-</div>
+        <img src="/assets/logo.png" alt="logo" />
+        <b>RETRO FIT</b>
+      </div>
 
       {/* Navigation Links */}
       <div className="nav-links">
@@ -69,5 +71,4 @@ const Navbar = ({
 };
 
 export default Navbar;
-
 
