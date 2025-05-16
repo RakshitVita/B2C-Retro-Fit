@@ -2,9 +2,15 @@ import { create } from 'zustand';
 import { axiosInstance } from '../AxiosInstance/axios_instance';
 
 const useUserStore = create((set) => ({
+<<<<<<< Updated upstream
   isPremium: false,
   isLoading: false,
   error: null,
+=======
+  isPremium: true,
+  isLoading: true,
+  error: null ,
+>>>>>>> Stashed changes
   lineLimitError: '',
   setLineLimitError: (msg) => set({ lineLimitError: msg }),
 
