@@ -1,16 +1,14 @@
 import React from 'react'
+import Maincontainer from './Maincontainer'
 
-
-
-const Subscription_section  = ({ children }) => {
+const Subscription_sections = () => {
   return (
-     <div className="flex justify-center items-center min-h-[80vh] px-4">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full  max-w-5xl">
-        {children}
-       Subscription_section
-      </div>
-    </div>
+    <>
+    <Maincontainer>
+        Subscription_sections
+    </Maincontainer>
+    </>
   )
 }
 
-export default Subscription_section 
+export default Subscription_sections

@@ -1,19 +1,21 @@
-
-import React, { useEffect } from "react";  
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
-import "./Navbar.css";
+import "./navbar.css";
 
 const Navbar = ({
   notifications = [],
   profileFields = [],
   filenumber,
 }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (filenumber > 4) {
       alert("You have exceeded your 4 free SQL code conversions.");
+      navigate("/subscriptions");
     }
-  }, [filenumber]);
+  }, [filenumber, navigate]);
 
   // Get avatar from profileFields
   const avatarField = profileFields.find(field => field.label.toLowerCase() === "avatar");
@@ -58,7 +60,7 @@ const Navbar = ({
         <div className="profile-dropdown">
           <img src={avatar} alt="User profile" className="profile-img" />
           <div className="dropdown-content">
-            {profileFields.map(({ label, value }) => (
+            {profileFields.slice(1).map(({ label, value }) => (
               <p key={label}>
                 <strong>{label}:</strong> {value}
               </p>
@@ -71,4 +73,3 @@ const Navbar = ({
 };
 
 export default Navbar;
-
