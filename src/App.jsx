@@ -21,7 +21,7 @@ const App = () => {
     
   ];
 
-  const filenumber = 5;
+  const filenumber = 3;
 
   return (
     <Router>
