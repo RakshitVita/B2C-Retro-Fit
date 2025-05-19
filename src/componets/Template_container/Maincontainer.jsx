@@ -3,8 +3,8 @@ import './Maincontainer.css';
 
 const Maincontainer = ({ children }) => {
   return (
-     <div className="flex justify-center items-center min-h-[80vh] ">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full  max-w-5xl">
+     <div className="main-container-outer ">
+      <div className="main-container-inner">
         {children}
       </div>
     </div>
