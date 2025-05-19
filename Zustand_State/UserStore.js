@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { axiosInstance } from '../AxiosInstance/axios_instance';
 
 const useUserStore = create((set) => ({
-  isPremium: false,
+  isPremium: true,
   isLoading: true,
   error: null ,
   lineLimitError: '',

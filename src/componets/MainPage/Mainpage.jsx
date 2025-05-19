@@ -4,7 +4,6 @@ import "./Mainpage.css";
 import tickIcon from "./mainpage_Assets/checkmark.png";
 import { RiLoader2Line } from "react-icons/ri";
 import downloadIcon from "./mainpage_Assets/download.png";
-import { jsPDF } from "jspdf";
 import useUserStore from '../../../Zustand_State/UserStore.js';
 
 const Mainpage = () => {
