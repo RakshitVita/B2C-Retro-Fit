@@ -5,7 +5,6 @@ const Maincontainer = ({ children }) => {
      <div className="flex justify-center items-center min-h-[80vh] ">
       <div>
         {children}
-        im here
       </div>
     </div>
   )
