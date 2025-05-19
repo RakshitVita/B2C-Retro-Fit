@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './Maincontainer.css';
 
 const Maincontainer = ({ children }) => {
   return (
@@ -7,7 +8,7 @@ const Maincontainer = ({ children }) => {
         {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Maincontainer
+export default Maincontainer;
