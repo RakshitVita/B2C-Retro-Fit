@@ -1,3 +1,6 @@
+
+
+
 .upload-container {
   width: 700px;
   height: 500px;
@@ -8,6 +11,7 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   text-align: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 h2 {
@@ -50,12 +54,12 @@ select {
   display: block;
   text-align: center;
   cursor: pointer;
-  padding: 24px 10px;
+  padding: 0px 10px;
   width: 500px;
   max-width: 520px;
   min-width: 220px;
   min-height: 60px;
-  height: 150px;
+  height: 165px;
 
   border: 2px dashed #377dff;
   border-radius: 10px;
@@ -63,7 +67,8 @@ select {
   transition: background 0.3s ease;
   margin: auto;
   box-sizing: border-box;
-  overflow-x: auto;
+  overflow: hidden;
+
 }
 
 
