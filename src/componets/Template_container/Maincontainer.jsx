@@ -1,13 +1,14 @@
-import React from 'react'
+import React from 'react';
+import './Maincontainer.css';
 
 const Maincontainer = ({ children }) => {
   return (
-     <div className="flex justify-center items-center min-h-[80vh] px-4">
+     <div className="flex justify-center items-center min-h-[80vh] ">
       <div className="bg-white rounded-xl shadow-lg p-8 w-full  max-w-5xl">
         {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Maincontainer
+export default Maincontainer;

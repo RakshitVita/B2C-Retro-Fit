@@ -1,0 +1,142 @@
+
+.downloads-log {
+  padding: 1rem;
+  background-color: #f3f5f7;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    thead {
+      background-color: #f0f4f8;
+      color: #34495e;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    tbody {
+      display: block;
+      max-height: 55vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      word-wrap: break-word;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .download-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #007bff;
+      font-size: 1.2rem;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #0056b3;
+      }
+    }
+
+    // Hide scrollbars
+    tbody::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    tbody {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    tbody::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+/* Toastify blue toast customization */
+:global(.Toastify__toast--info) {
+  background-color: #007bff !important;
+  color: white !important;
+}
+
+:global(.Toastify__close-button) {
+  color: white !important;
+}
+
+/* ------------------- */
+/* RESPONSIVE SECTION  */
+/* ------------------- */
+@media (max-width: 768px) {
+  .downloads-log {
+    padding: 0.5rem;
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    table {
+      font-size: 0.9rem;
+
+      th, td {
+        padding: 0.6rem;
+      }
+
+      .download-btn {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .downloads-log {
+    h2 {
+      font-size: 1.2rem;
+    }
+
+    table {
+      font-size: 0.85rem;
+
+      th, td {
+        padding: 0.4rem;
+        font-size: 0.75rem;
+      }
+
+      .download-btn {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
