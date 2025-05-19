@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
-import "./navbar.css";
+import "./Navbar.css";
 
 const Navbar = ({
   notifications = [],
