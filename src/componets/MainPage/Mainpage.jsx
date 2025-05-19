@@ -210,7 +210,6 @@ const handleDownload = () => {
           ref={fileInputRef}
           style={{ display: "none" }}
         />
-        <p className="file-info">Zip, .txt, .png (max: 10MB). Up to 400 lines of code allowed.</p>
       </label>
       {/*Line Limit error*/}
       {lineLimitError &&<p className='error-text'> {lineLimitError} </p>}
