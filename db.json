@@ -3,7 +3,7 @@
     {
       "id": 1,
       "codeType": "SQL",
-      "activityLog": "01.05.25",
+      "activityLog": "01/05/2025",
       "fileName": "demo-1.pdf",
       "fileSize": "2.5 MB",
       "linesOfCode": 120,
@@ -13,7 +13,7 @@
     {
       "id": 2,
       "codeType": "SQL",
-      "activityLog": "04.05.25",
+      "activityLog": "04/05/2025",
       "fileName": "demo-2.pdf",
       "fileSize": "3.0 MB",
       "linesOfCode": 145,
@@ -22,7 +22,7 @@
     {
         "id":3,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Demo-3.pdf",
         "fileSize":"4.0 MB",
         "linesOfCode":300,
@@ -32,7 +32,7 @@
      {
         "id":4,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"demo.docs",
         "fileSize":"4.0 MB",
         "linesOfCode":300,
@@ -41,7 +41,7 @@
      {
         "id":5,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -49,7 +49,7 @@
      {
         "id":6,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.pdf",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -57,7 +57,7 @@
      {
         "id":7,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -65,7 +65,7 @@
     {
         "id":8,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -74,7 +74,7 @@
     {
         "id":9,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -83,7 +83,7 @@
     {
         "id":10,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -92,7 +92,7 @@
     {
         "id":11,
         "codeType":"Java",
-        "activityLog":"07.05.25",
+        "activityLog":"07/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300
@@ -101,7 +101,7 @@
     {
         "id":12,
         "codeType":"Java",
-        "activityLog":"09.05.25",
+        "activityLog":"09/05/2025",
         "fileName":"Filename3_sql.Doc",
         "fileSize":"4.0 MB",
         "linesOfCode":300

@@ -14,7 +14,15 @@ const Download = () => {
         if (!res.ok) throw new Error("Failed to fetch download history.");
         return res.json();
       })
-      .then((data) => setDownloads(data))
+       .then((data) => {
+        const sortedData = data.sort((a, b) => {
+          const [d1, m1, y1] = a.activityLog.split(".").map(Number);
+          const [d2, m2, y2] = b.activityLog.split(".").map(Number);
+          return new Date(b.activityLog.split("/").reverse().join("/")) - new Date(a.activityLog.split("/").reverse().join("/"));
+
+        });
+        setDownloads(sortedData);
+      })
       .catch((err) => {
         console.error("Error fetching download history:", err);
       })
