@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Maincontainer from "../Maincontainer";
+import Maincontainer from "../Template_container/Maincontainer";
 import { FiDownload } from "react-icons/fi";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Download.scss";
 
