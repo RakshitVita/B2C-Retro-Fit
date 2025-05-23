@@ -1,14 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import "./Navbar.css";
+import useAuthStore from "../../../Zustand_State/AuthStore";
 
 const Navbar = ({
   notifications = [],
-  profileFields = [],
   filenumber,
 }) => {
+
+  const { authUser,logout } = useAuthStore();
   const navigate = useNavigate();
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+const dropdownRef = useRef();
+
+useEffect(() => {
+  function handleClickOutside(event) {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  }
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
 
   useEffect(() => {
     if (filenumber > 4) {
@@ -17,11 +32,7 @@ const Navbar = ({
     }
   }, [filenumber, navigate]);
 
-  // Get avatar from profileFields
-  const avatarField = profileFields.find(field => field.label.toLowerCase() === "avatar");
-  const avatar = avatarField?.value || "https://via.placeholder.com/36";
-
-  return (
+   return (
     <nav className="navbar">
       {/* Logo */}
       <div className="logo">
@@ -57,16 +68,33 @@ const Navbar = ({
         </div>
 
         {/* Profile Dropdown */}
-        <div className="profile-dropdown">
-          <img src={avatar} alt="User profile" className="profile-img" />
-          <div className="dropdown-content">
-            {profileFields.slice(1).map(({ label, value }) => (
-              <p key={label}>
-                <strong>{label}:</strong> {value}
-              </p>
-            ))}
-          </div>
-        </div>
+<div className="profile-dropdown" ref={dropdownRef}>
+  {authUser && authUser.picture && (
+    <img
+      src={authUser.picture}
+      alt="User profile"
+      className="profile-img"
+      onClick={() => setDropdownOpen((open) => !open)}
+      style={{ cursor: "pointer" }}
+    />
+  )}
+  <div
+    className="dropdown-content"
+    style={{ display: dropdownOpen ? "block" : "none" }}
+  >
+    {authUser ? (
+      <>
+        <p>
+          <strong>Name: </strong>{authUser.name || ""} <br />
+          <strong>Email: </strong>{authUser.email || ""}
+        </p>
+        <button className="logout_button" onClick={logout}>LogOut</button>
+      </>
+    ) : (
+      <p>No user info</p>
+    )}
+  </div>
+</div>
       </div>
     </nav>
   );

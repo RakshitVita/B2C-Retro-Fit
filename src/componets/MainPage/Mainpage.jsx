@@ -75,7 +75,6 @@ const processFileUpload = async (file) => {
 
   const handleFileChange = async (e) => {
     const uploadedFile = e.target.files[0];
-    processFileUpload(uploadedFile);
     setIsConverted(false);
     setIsLoading(true);
 
@@ -92,7 +91,7 @@ const passedValidation = await processFileUpload(uploadedFile);
   if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
   e.preventDefault();
   const droppedFile = e.dataTransfer.files[0];
   processFileUpload(droppedFile);

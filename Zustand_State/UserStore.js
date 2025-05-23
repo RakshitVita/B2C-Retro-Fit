@@ -13,7 +13,7 @@ const useUserStore = create((set) => ({
   fetchUserStatus: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axiosInstance.get('/user/status'); // replace with your endpoint
+      const response = await axiosInstance.get('/api/user/status'); // replace with your endpoint
       const isPremium = response.data?.isPremium || false;
       set({ isPremium });
     } catch (err) {
