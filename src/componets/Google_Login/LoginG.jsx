@@ -12,9 +12,9 @@ const LoginG = () => {
         <div className='flex justify-center items-center h-screen'>
 <GoogleLogin
                 onSuccess={credentialResponse => {
-                    const credentailResponseDecoded = jwtDecode(credentialResponse.credential);
-                    signup(credentailResponseDecoded);
-                    console.log(credentailResponseDecoded);
+                    const credentailResponse = credentialResponse.credential;
+                    signup({token:credentailResponse});
+                    console.log(credentailResponse);
 
                     // Save user info to localStorage
                     localStorage.setItem('user', JSON.stringify(credentailResponseDecoded));
