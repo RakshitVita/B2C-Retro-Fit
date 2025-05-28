@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../AxiosInstance/axios_instance";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie"
 
 const useAuthStore = create((set) => (
     {
@@ -12,27 +13,39 @@ const useAuthStore = create((set) => (
         authUser: null,
         isCheaking: false,
 
-        checkAuth: async () => {
-            try {
-                const res = await axiosInstance.get('/api/auth/check')
-                set({ authUser: res.data });
-            } catch (error) {
-                console.log("Error in checkAuth:", error);
-                set({ authUser: null });
-            } finally {
-                set({ isCheckingAuth: false });
-            }
-        },
+        // checkAuth: async () => {
+        //     try {
+        //         const res = await axiosInstance.get('/api/auth/check')
+        //         set({ authUser: res.data.user });
+        //     } catch (error) {
+        //         console.log("Error in checkAuth:", error);
+        //         set({ authUser: null });
+        //     } finally {
+        //         set({ isCheckingAuth: false });
+        //     }
+        // },
 
         signup: async (data) => {
             try {
                 // const res = await axiosInstance.post("/auth/signup", data);
-                // set({ authUser: res.data });
+                // set({ authUser: res.data.user });
+                // Cookies.set("access_token", res.data.access_token, {
+                //     path: "/",
+                //     secure: true,
+                //     sameSite: "strict",
+                //     expires: 7
+                // });
                 set({ authUser: data });
+                Cookies.set("access_token", data, {
+                    path: "/",
+                    secure: true,
+                    sameSite: "strict",
+                    expires: 7
+                });
                 toast.success("Account created successfully");
             } catch (error) {
                 toast.error(error.response.data.message);
-            } 
+            }
         },
 
         logout: async () => {
