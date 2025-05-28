@@ -1,0 +1,173 @@
+.subscription-container {
+  text-align: center;
+  background: #f7f8fa;
+  padding: 3rem 2rem;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d2e3e;
+  }
+
+  p {
+    color: #7a7a7a;
+    margin-bottom: 1.5rem;
+  }
+
+  .toggle-switch {
+    background: #eee;
+    display: inline-flex;
+    border-radius: 999px;
+    padding: 0.25rem;
+    margin-bottom: 2rem;
+
+    button {
+      border: none;
+      background: transparent;
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      color: black;
+
+      &.active {
+        background: white;
+        color: #0050d5;
+        box-shadow: 0 0 0 2px #0050d5 inset;
+      }
+    }
+  }
+
+  .card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .plan-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 250px;
+    text-align: left;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 2px solid transparent;
+
+    h3 {
+      font-size: 1.5rem;
+      color: #2d2e3e;
+      margin-bottom: 0.5rem;
+
+      span {
+        font-size: 0.9rem;
+        color: #777;
+      }
+    }
+
+    h4 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #2d2e3e;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: #777;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.5rem;
+
+      li {
+        margin-bottom: 0.5rem;
+        color: #5e5e5e;
+        font-size: 0.9rem;
+      }
+    }
+
+    .choose-btn {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 999px;
+      background-color: #eaeafd;
+      color: #2d2e3e;
+      font-weight: bold;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background-color: #d0d0ff;
+      }
+    }
+
+    &:hover {
+      background-color: #eef2ff;
+      h3, h4, p, li {
+        color: #1e1e2d;
+      }
+    }
+
+    &.active {
+      border: 2px solid #0050d5;
+      transform: scale(1.05);
+      background-color: #eef2ff;
+    }
+
+    &.most-popular {
+      background: linear-gradient(135deg, #4f2ddf, #6e46ff);
+      color: white;
+
+      h3, h4, p, li {
+        color: white !important;
+      }
+
+      .choose-btn {
+        background-color: white;
+        color: #2d2e3e;
+
+        &:hover {
+          background-color: #f0f0ff;
+        }
+      }
+
+      &.active {
+        background: white;
+        color: #2d2e3e;
+
+        h3, h4, p, li {
+          color: #2d2e3e !important;
+        }
+
+        .choose-btn {
+          background-color: #0050d5;
+          color: white;
+        }
+      }
+
+      &:hover:not(.active) {
+        background: #6e46ff;
+      }
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      color: #4f2ddf;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border-radius: 999px;
+      z-index: 1;
+    }
+  }
+}
+
