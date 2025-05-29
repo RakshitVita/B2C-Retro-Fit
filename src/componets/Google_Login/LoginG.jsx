@@ -18,9 +18,9 @@ const LoginG = () => {
 
 
   const handleGoogleSuccess = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
+    const decoded = credentialResponse.credential;
     signup(decoded);
-    localStorage.setItem('user', JSON.stringify(decoded));
+    // localStorage.setItem('user', JSON.stringify(decoded));
     console.log(decoded);
   };
 

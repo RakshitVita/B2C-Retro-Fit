@@ -27,21 +27,21 @@ const useAuthStore = create((set) => (
 
         signup: async (data) => {
             try {
-                // const res = await axiosInstance.post("/auth/signup", data);
-                // set({ authUser: res.data.user });
-                // Cookies.set("access_token", res.data.access_token, {
-                //     path: "/",
-                //     secure: true,
-                //     sameSite: "strict",
-                //     expires: 7
-                // });
-                set({ authUser: data });
-                Cookies.set("access_token", data, {
+                const res = await axiosInstance.post("/auth/signup", { id_token: data});
+                set({ authUser: res.data.user });
+                Cookies.set("access_token", res.data.access_token, {
                     path: "/",
                     secure: true,
                     sameSite: "strict",
                     expires: 7
                 });
+                // set({ authUser: data });
+                // Cookies.set("access_token", data, {
+                //     path: "/",
+                //     secure: true,
+                //     sameSite: "strict",
+                //     expires: 7
+                // });
                 toast.success("Account created successfully");
             } catch (error) {
                 toast.error(error.response.data.message);
@@ -52,6 +52,7 @@ const useAuthStore = create((set) => (
             try {
                 // await axiosInstance.post("/auth/logout");
                 set({ authUser: null });
+                Cookies.remove('access_token');
                 toast.success("Logged out successfully");
             } catch (error) {
                 toast.error(error.response.data.message);
