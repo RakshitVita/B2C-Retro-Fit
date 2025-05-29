@@ -8,6 +8,7 @@ import Download from "./componets/Downloads/Download";
 import Subscription_section from "./componets/Subscription/Subscription_section";
 import LoginG from "./componets/Google_Login/LoginG";
 import useAuthStore from "../Zustand_State/AuthStore";
+import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
 
 
@@ -44,6 +45,8 @@ const App = () => {
   const filenumber = 2;
 
   return (
+    <>
+     <Toaster position="top-center" />
     <Router>
       <Navbar
         notifications={notifications}
@@ -52,12 +55,13 @@ const App = () => {
       />
            <Routes>
              {/* sub route */}
-             <Route path="/" element={authUser ? <Mainpage/> : <Navigate to="/login"/>}  />
+             <Route path="/" element={ <Mainpage/> }  />
              <Route path="/downloads" element={authUser ? <Download/> : <Navigate to="/login"/>} />
              <Route path="/subscriptions" element={authUser ?<Subscription_section/>: <Navigate to="/login"/>} />
              <Route path="/login" element={!authUser ? <LoginG/> : <Navigate to = "/"/>} />
            </Routes>
     </Router>
+    </>
   );
 };
 

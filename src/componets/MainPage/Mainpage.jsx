@@ -5,21 +5,33 @@ import tickIcon from "./mainpage_Assets/checkmark.png";
 import { RiLoader2Line } from "react-icons/ri";
 import downloadIcon from "./mainpage_Assets/download.png";
 import useUserStore from '../../../Zustand_State/UserStore.js';
+import LoginG from "../Google_Login/LoginG.jsx";
 
 const Mainpage = () => {
   const [fileType, setFileType] = useState("Sql");
   const [file, setFile] = useState(null);
   const [isConverted, setIsConverted] = useState(false);
-  const fileInputRef = useRef(null);
   const [languagelimiterror, setLanguagelimiterror] = useState(false);
   const [formatError, setFormatError] = useState('')
+  const [firstUploadDone, setFirstUploadDone] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [waitingForRealConvert, setWaitingForRealConvert] = useState(false);
 
-  const { validateFileUpload, lineLimitError, isPremium, fetchUserStatus, setLineLimitError, convertFile, convertedFile, isLoading, setIsLoading } = useUserStore();
+  const fileInputRef = useRef(null);
+  const { validateFileUpload, lineLimitError, isPremium, fetchUserStatus, setLineLimitError, convertFile, convertedFile, isLoading, setIsLoading,authUser} = useUserStore();
 
   useEffect(() => {
     fetchUserStatus(); // optional if already called globally
   }, []);
 
+    useEffect(() => {
+    if (authUser && waitingForRealConvert && file) {
+      setShowLoginPopup(false);
+      setWaitingForRealConvert(false);
+      handleDownload();
+    }
+    // eslint-disable-next-line
+  }, [authUser]);
 
 
   const allowedExtensions = {
@@ -76,9 +88,25 @@ const Mainpage = () => {
 
   const handleFileChange = async (e) => {
     const uploadedFile = e.target.files[0];
+    if (!uploadedFile) return;
+    setFile(uploadedFile);
     setIsConverted(false);
-    setIsLoading(true);
 
+    // Dummy conversion for the first upload only
+    if (!firstUploadDone) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsConverted(true);
+        setFirstUploadDone(true);
+      }, 2000);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    // For subsequent uploads, call your real API logic
+    setIsLoading(true);
+    setLineLimitError('');
     const passedValidation = await processFileUpload(uploadedFile);
     if (!passedValidation) {
       setIsLoading(false);
@@ -133,16 +161,34 @@ const Mainpage = () => {
   };
 
 
-  const handleDownload = () => {
-    if (!convertedFile) return;
-
-    const url = window.URL.createObjectURL(convertedFile);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${file.name.replace(/\.[^/.]+$/, "")}_converted.pdf`; // adjust based on backend
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    if (!authUser) {
+      setShowLoginPopup(true);
+      setWaitingForRealConvert(true);
+      return;
+    }
+    // If already converted for real, allow download
+    if (convertedFile) {
+      const url = window.URL.createObjectURL(convertedFile);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${file.name.replace(/\.[^/.]+$/, "")}_converted.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+    // If not converted for real, do real conversion now
+    setIsLoading(true);
+    setLineLimitError('');
+    const passedValidation = await validateFileUpload(file);
+    if (!passedValidation) {
+      setIsLoading(false);
+      return;
+    }
+    await convertFile(file, fileType);
+    setIsLoading(false);
+    setIsConverted(true);
   };
 
 
@@ -238,7 +284,7 @@ const Mainpage = () => {
                 </>
               ) : null}
             </span>
-            {convertedFile && isConverted && (
+            { isConverted && (
               <button className="download-btn" onClick={handleDownload} title="Download">
                 <img src={downloadIcon} alt="Download" style={{ width: "26px", height: "26px" }} />
               </button>
@@ -246,6 +292,14 @@ const Mainpage = () => {
           </div>
         )}
       </div>
+      {/* Login popup/modal */}
+      {showLoginPopup && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <LoginG onClose={() => setShowLoginPopup(false)} />
+          </div>
+        </div>
+      )}
     </>
   );
 };
