@@ -6,6 +6,7 @@ import { RiLoader2Line } from "react-icons/ri";
 import downloadIcon from "./mainpage_Assets/download.png";
 import useUserStore from '../../../Zustand_State/UserStore.js';
 
+
 const Mainpage = () => {
   const [fileType, setFileType] = useState("Sql");
   const [file, setFile] = useState(null);
@@ -149,6 +150,7 @@ const handleDownload = () => {
   return (
     <>
     <div className="upload-container">
+    
       <h2>CONVERT CODE TO DOCUMENT</h2>
       <p className="description">
         Auto-generate detailed documentation from any code snippet.
