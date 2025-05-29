@@ -1,4 +1,4 @@
-import React, { useEffect,useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import "./Navbar.css";
@@ -9,21 +9,21 @@ const Navbar = ({
   filenumber,
 }) => {
 
-  const { authUser,logout } = useAuthStore();
+  const { authUser, logout } = useAuthStore();
   const navigate = useNavigate();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-const dropdownRef = useRef();
+  const dropdownRef = useRef();
 
-useEffect(() => {
-  function handleClickOutside(event) {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setDropdownOpen(false);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
     }
-  }
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (filenumber > 4) {
@@ -32,7 +32,7 @@ useEffect(() => {
     }
   }, [filenumber, navigate]);
 
-   return (
+  return (
     <nav className="navbar">
       {/* Logo */}
       <div className="logo">
@@ -49,52 +49,55 @@ useEffect(() => {
 
       {/* Right Actions */}
       <div className="action-buttons">
-        <button className="btn">
-          Try {filenumber}/4 SQL Code Conversions for Free
-        </button>
-
+        {authUser &&
+          <button className="btn">
+            Try {filenumber}/4 SQL Code Conversions for Free
+          </button>
+        }
         {/* Notifications */}
-        <div className="icon-dropdown">
-          <FaBell size={20} className="icon" />
-          <div className="dropdown-content">
-            {notifications.length ? (
-              notifications.map((note, i) => (
-                <p key={i} className="dropdown-line">• {note}</p>
-              ))
+        {authUser &&
+          <div className="icon-dropdown">
+            <FaBell size={20} className="icon" />
+            <div className="dropdown-content">
+              {notifications.length ? (
+                notifications.map((note, i) => (
+                  <p key={i} className="dropdown-line">• {note}</p>
+                ))
+              ) : (
+                <p className="dropdown-line">No notifications</p>
+              )}
+            </div>
+          </div>
+
+        }
+        {/* Profile Dropdown */}
+        <div className="profile-dropdown" ref={dropdownRef}>
+          {authUser && authUser.picture && (
+            <img
+              src={authUser.picture}
+              alt="User profile"
+              className="profile-img"
+              onClick={() => setDropdownOpen((open) => !open)}
+              style={{ cursor: "pointer" }}
+            />
+          )}
+          <div
+            className="dropdown-content"
+            style={{ display: dropdownOpen ? "block" : "none" }}
+          >
+            {authUser ? (
+              <>
+                <p>
+                  <strong>Name: </strong>{authUser.name || ""} <br />
+                  <strong>Email: </strong>{authUser.email || ""}
+                </p>
+                <button className="logout_button" onClick={logout}>LogOut</button>
+              </>
             ) : (
-              <p className="dropdown-line">No notifications</p>
+              <p>No user info</p>
             )}
           </div>
         </div>
-
-        {/* Profile Dropdown */}
-<div className="profile-dropdown" ref={dropdownRef}>
-  {authUser && authUser.picture && (
-    <img
-      src={authUser.picture}
-      alt="User profile"
-      className="profile-img"
-      onClick={() => setDropdownOpen((open) => !open)}
-      style={{ cursor: "pointer" }}
-    />
-  )}
-  <div
-    className="dropdown-content"
-    style={{ display: dropdownOpen ? "block" : "none" }}
-  >
-    {authUser ? (
-      <>
-        <p>
-          <strong>Name: </strong>{authUser.name || ""} <br />
-          <strong>Email: </strong>{authUser.email || ""}
-        </p>
-        <button className="logout_button" onClick={logout}>LogOut</button>
-      </>
-    ) : (
-      <p>No user info</p>
-    )}
-  </div>
-</div>
       </div>
     </nav>
   );

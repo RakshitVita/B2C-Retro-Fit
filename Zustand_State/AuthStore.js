@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../AxiosInstance/axios_instance";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie"
 
 const useAuthStore = create((set) => (
     {
@@ -10,35 +11,62 @@ const useAuthStore = create((set) => (
         //     picture: "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
         // },
         authUser: null,
-        isCheaking: false,
+        isChecking: false,
 
         checkAuth: async () => {
+            set({ isChecking: true });
             try {
-                const res = await axiosInstance.get('/api/auth/check')
-                set({ authUser: res.data });
+                const token = Cookies.get("access_token");
+                const userCookie = Cookies.get("user");
+                if (token && userCookie) {
+                    set({ authUser: JSON.parse(userCookie), isChecking: false });
+                    return;
+                }
+                // If no user or token, clear authUser
+                set({ authUser: null, isChecking: false });
+                Cookies.remove("user");
+                Cookies.remove("access_token");
             } catch (error) {
-                console.log("Error in checkAuth:", error);
-                set({ authUser: null });
-            } finally {
-                set({ isCheckingAuth: false });
+                set({ authUser: null, isChecking: false });
+                Cookies.remove("user");
+                Cookies.remove("access_token");
             }
         },
-
         signup: async (data) => {
             try {
-                // const res = await axiosInstance.post("/auth/signup", data);
-                // set({ authUser: res.data });
-                set({ authUser: data });
-                toast.success("Account created successfully");
+                const res = await axiosInstance.post("/auth/signup", { id_token: data });
+                set({ authUser: res.data.user });
+                Cookies.set("access_token", res.data.access_token, {
+                    path: "/",
+                    secure: true,
+                    sameSite: "strict",
+                    expires: 7
+                });
+                Cookies.set("user", JSON.stringify(res.data.user), {
+                    path: "/",
+                    secure: true,
+                    sameSite: "strict",
+                    expires: 7
+                });
+                // set({ authUser: data });
+                // Cookies.set("access_token", data, {
+                //     path: "/",
+                //     secure: true,
+                //     sameSite: "strict",
+                //     expires: 7
+                // });
+                toast.success("Logged in successfully");
             } catch (error) {
-                toast.error(error.response.data.message);
-            } 
+                toast.error(error.response?.data?.message || "Failed Sign up");
+            }
         },
 
         logout: async () => {
             try {
                 // await axiosInstance.post("/auth/logout");
                 set({ authUser: null });
+                Cookies.remove('access_token');
+                Cookies.remove('user');
                 toast.success("Logged out successfully");
             } catch (error) {
                 toast.error(error.response.data.message);

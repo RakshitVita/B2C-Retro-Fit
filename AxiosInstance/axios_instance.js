@@ -1,5 +1,5 @@
 import axios from "axios"
 export const axiosInstance=axios.create({
-    baseURL:"http://3.222.109.101:5000",
+    baseURL:import.meta.env.VITE_BACKEND_URL,
     withCredentials:true,
 })
