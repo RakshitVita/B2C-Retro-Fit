@@ -9,11 +9,15 @@ const useUserStore = create((set) => ({
   lineLimitError: '',
   setIsLoading: (value) => set({ isLoading: value }),
   setLineLimitError: (msg) => set({ lineLimitError: msg }),
+  pendingFile: null,
+  pendingLanguage: null,
+  setPendingFileAndLanguage: (file, language) => set({ pendingFile: file, pendingLanguage: language }),
+  clearPending: () => set({ pendingFile: null, pendingLanguage: null }),
 
   fetchUserStatus: async () => {
     set({ isLoading: true, error: null });
-     const token = Cookies.get("access_token");
-    
+    const token = Cookies.get("access_token");
+
     try {
       const response = await axiosInstance.get('/api/user/status',
         {

@@ -12,6 +12,7 @@ const useAuthStore = create((set) => (
         // },
         authUser: null,
         isChecking: false,
+        isLoggingIn:false,
 
         checkAuth: async () => {
             set({ isChecking: true });
@@ -33,6 +34,7 @@ const useAuthStore = create((set) => (
             }
         },
         signup: async (data) => {
+             set({ isLoggingIn: true });
             try {
                 const res = await axiosInstance.post("/auth/signup", { id_token: data });
                 set({ authUser: res.data.user });
@@ -48,6 +50,8 @@ const useAuthStore = create((set) => (
                     sameSite: "strict",
                     expires: 7
                 });
+
+                set({ authUser: res.data.user ,isLoggingIn:false});
                 // set({ authUser: data });
                 // Cookies.set("access_token", data, {
                 //     path: "/",
@@ -57,6 +61,7 @@ const useAuthStore = create((set) => (
                 // });
                 toast.success("Logged in successfully");
             } catch (error) {
+                  set({ authUser: null, isChecking: false });
                 toast.error(error.response?.data?.message || "Failed Sign up");
             }
         },

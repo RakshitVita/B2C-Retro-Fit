@@ -13,20 +13,20 @@ import { Loader } from "lucide-react";
 
 
 const App = () => {
-  const {authUser,checkAuth, isCheaking}= useAuthStore();
+  const {authUser,checkAuth, isChecking,isLoggingIn}= useAuthStore();
 
 
   // Enable it after integrating Api
-  // useEffect(() => {
-  // checkAuth();
-  // }, [checkAuth])
+  useEffect(() => {
+  checkAuth();
+  }, [checkAuth])
 
-  // if(isCheaking && !authUser)
-  //   return(
-  //     <div className="flex justify-center items-center h-screen">
-  //       <Loader className="size-10 animate-spin"/>
-  //       </div>
-  //   );
+  if(!authUser && (isChecking || isLoggingIn))
+    return(
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="size-10 animate-spin"/>
+        </div>
+    );
   
 
   const notifications = [
