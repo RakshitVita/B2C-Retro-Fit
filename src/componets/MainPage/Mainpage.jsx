@@ -7,6 +7,7 @@ import useUserStore from '../../../Zustand_State/UserStore.js';
 import useAuthStore from '../../../Zustand_State/AuthStore.js';
 import LoginG from "../Google_Login/LoginG.jsx";
 import { useNavigate } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 
 const allowedExtensions = {
   Sql: ['.sql', '.txt'],
@@ -31,7 +32,7 @@ const Mainpage = () => {
     setLineLimitError,
     validateFileUpload,
     convertFile,
-    convertedFile,
+    conRedMessage,
     isLoading,
     setIsLoading,
   } = useUserStore();
@@ -49,6 +50,9 @@ const Mainpage = () => {
     }
   }, [showLoginPopup]);
 
+  const handleGoToDownloads = () => {
+    navigate("/downloads");
+  };
 
   const isValidExtension = (fileName, language) => {
     const ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
@@ -264,25 +268,31 @@ const Mainpage = () => {
         {file && (
           <div className="status-container">
             <span className="file-name">{file.name}</span>
-            <span className={`status ${isConverted ? "converted" : "converting"}`}>
+            <span className="status">
               {isLoading ? (
                 <>
                   <RiLoader2Line className="rotating" size={20} color="#0b3d91" />
-                  &nbsp;Converting...
+                  &nbsp; Processing...
                 </>
-              ) : isConverted ? (
+              ) : conRedMessage ? (
                 <>
-                  <img src={tickIcon} alt="Converted" className="tick-icon" />
-                  Converted
+                  <span style={{ color: "#0b3d91", fontWeight: "bold" }}>{conRedMessage}</span>
+                  <button
+                    className="arrow-btn"
+                    onClick={handleGoToDownloads}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      marginLeft: "10px",
+                    }}
+                    title="Go to Downloads"
+                  >
+                    <FaArrowRight size={24} color="#0b3d91" />
+                  </button>
                 </>
               ) : null}
             </span>
-            {/* Only show download if real conversion is done */}
-            {isConverted && convertedFile && (
-              <button className="download-btn" onClick={handleDownload} title="Download">
-                <img src={downloadIcon} alt="Download" style={{ width: "26px", height: "26px" }} />
-              </button>
-            )}
           </div>
         )}
       </div>

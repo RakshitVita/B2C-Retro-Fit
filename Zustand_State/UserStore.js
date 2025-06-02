@@ -7,12 +7,12 @@ const useUserStore = create((set) => ({
   isLoading: true,
   error: null,
   lineLimitError: '',
+  conRedMessage: '',
+    downloads: [], // <--- Make sure this is an array, not undefined
+  downloadsLoading: false,
+
   setIsLoading: (value) => set({ isLoading: value }),
   setLineLimitError: (msg) => set({ lineLimitError: msg }),
-  pendingFile: null,
-  pendingLanguage: null,
-  setPendingFileAndLanguage: (file, language) => set({ pendingFile: file, pendingLanguage: language }),
-  clearPending: () => set({ pendingFile: null, pendingLanguage: null }),
 
   fetchUserStatus: async () => {
     set({ isLoading: true, error: null });
@@ -71,7 +71,7 @@ const useUserStore = create((set) => ({
   },
 
   convertFile: async (file, language) => {
-    set({ isLoading: true, error: null, convertedFile: null });
+    set({ isLoading: true, error: null });
     //getting token from cookies
     const token = Cookies.get("access_token");
     const formData = new FormData();
@@ -82,17 +82,28 @@ const useUserStore = create((set) => ({
       const response = await axiosInstance.post(
         '/api/convert-file', formData,
         {
-          responseType: 'blob',
+          // responseType: 'blob',
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       );
-      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      // const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
 
-      set({ convertedFile: blob, isLoading: false });
+      set({ conRedMessage: response.data.message, isLoading: false });
     } catch (error) {
       console.error('Conversion failed:', error);
       set({ error: 'File conversion failed', isLoading: false });
+    }
+  },
+
+  fetchDownloads: async () => {
+    set({ downloadsLoading: true });
+    try {
+      const response = await axiosInstance.get("http://127.0.0.1:8890/get_all_files");
+      set({ downloads: response.data, downloadsLoading: false });
+    } catch (error) {
+      console.error("Failed to fetch downloads:", error);
+      set({ downloads: [], downloadsLoading: false });
     }
   },
 

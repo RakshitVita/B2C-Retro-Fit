@@ -1,41 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Maincontainer from "../Template_container/Maincontainer";
 import { FiDownload } from "react-icons/fi";
+import useUserStore from "../../../Zustand_State/UserStore";
 import "react-toastify/dist/ReactToastify.css";
 import "./Download.scss";
 
 const Download = () => {
-  const [downloads, setDownloads] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { downloads, downloadsLoading, fetchDownloads } = useUserStore();
 
   useEffect(() => {
-    fetch("http://localhost:5000/download-history")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch download history.");
-        return res.json();
-      })
-       .then((data) => {
-        const sortedData = data.sort((a, b) => {
-          const [d1, m1, y1] = a.activityLog.split(".").map(Number);
-          const [d2, m2, y2] = b.activityLog.split(".").map(Number);
-          return new Date(b.activityLog.split("/").reverse().join("/")) - new Date(a.activityLog.split("/").reverse().join("/"));
-
-        });
-        setDownloads(sortedData);
-      })
-      .catch((err) => {
-        console.error("Error fetching download history:", err);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    fetchDownloads();
+  }, [fetchDownloads]);
 
   const handleDownload = async (fileName, fileUrl) => {
+    if (!fileUrl) {
+      alert("No download URL available for this file.");
+      return;
+    }
     try {
       const response = await fetch(fileUrl);
       if (!response.ok) {
         throw new Error("File not found or server error");
       }
-
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
 
@@ -46,7 +32,7 @@ const Download = () => {
       a.click();
 
       a.remove();
-      window.URL.revokeObjectURL(url); // clean up blob URL
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download failed:", error);
       alert("Download failed. Please check the file path or try again.");
@@ -57,14 +43,13 @@ const Download = () => {
     <Maincontainer>
       <div className="downloads-log">
         <h2>Downloads Log</h2>
-        {loading ? (
+        {downloadsLoading ? (
           <p>Loading...</p>
         ) : (
           <table>
             <thead>
               <tr>
-                <th>Code Type</th>
-                <th>Activity Log</th>
+                <th>Language</th>
                 <th>File Name</th>
                 <th>File Size</th>
                 <th>Lines of Code</th>
@@ -72,22 +57,23 @@ const Download = () => {
               </tr>
             </thead>
             <tbody>
-              {downloads.map((entry) => (
-                <tr key={entry.id}>
-                  <td>{entry.codeType}</td>
-                  <td>{entry.activityLog}</td>
-                  <td>{entry.fileName}</td>
-                  <td>{entry.fileSize}</td>
-                  <td>{entry.linesOfCode}</td>
+              {downloads.map((entry, idx) => (
+                <tr key={entry.filename + idx}>
+                  <td>{entry.language}</td>
+                  <td>{entry.filename}</td>
+                  <td>{entry.file_size}</td>
+                  <td>{entry.code_lines}</td>
                   <td>
-                    <button
-                      className="download-btn"
-                      onClick={() =>
-                        handleDownload(entry.fileName, entry.fileUrl)
-                      }
-                    >
-                      <FiDownload />
-                    </button>
+                    {entry.url ? (
+                      <button
+                        className="download-btn"
+                        onClick={() => handleDownload(entry.filename, entry.url)}
+                      >
+                        <FiDownload />
+                      </button>
+                    ) : (
+                      <span style={{ color: "#aaa" }}>N/A</span>
+                    )}
                   </td>
                 </tr>
               ))}
