@@ -3,12 +3,17 @@ import { axiosInstance } from '../AxiosInstance/axios_instance';
 import Cookies from "js-cookie";
 
 const useUserStore = create((set) => ({
+
   isPremium: false,
+  languages: [],
+  allowedLanguages: [],
+  extensions: {},
   isLoading: true,
   error: null,
   lineLimitError: '',
   conRedMessage: '',
-    downloads: [], // <--- Make sure this is an array, not undefined
+
+  downloads: [], // <--- Make sure this is an array, not undefined
   downloadsLoading: false,
 
   setIsLoading: (value) => set({ isLoading: value }),
@@ -25,10 +30,25 @@ const useUserStore = create((set) => ({
         }
       ); // replace with your endpoint
       const isPremium = response.data?.isPremium || false;
-      set({ isPremium });
+      set({
+        isPremium,
+        credits: response.data?.credits ?? 0,
+        languages: response.data?.languages || [],
+        allowedLanguages: response.data?.allowed_languages || [],
+        extensions: response.data?.extensions || {},
+        isLoading: false,
+      });
     } catch (err) {
       console.error('Failed to fetch user status:', err);
-      set({ error: 'Failed to fetch user status', isLoading: false });
+      set({
+        error: 'Failed to fetch user status',
+        isPremium: false,
+        credits: 0,
+        languages: [],
+        allowedLanguages: [],
+        extensions: {},
+        isLoading: false,
+      });
     }
   },
 

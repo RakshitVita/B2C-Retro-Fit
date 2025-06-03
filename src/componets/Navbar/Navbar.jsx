@@ -51,7 +51,7 @@ const Navbar = ({
       <div className="action-buttons">
         {authUser &&
           <button className="btn">
-            Try {filenumber}/4 SQL Code Conversions for Free
+            Try {filenumber}/4  Conversions for Free
           </button>
         }
         {/* Notifications */}

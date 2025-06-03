@@ -1,26 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./Mainpage.css";
-import tickIcon from "./mainpage_Assets/checkmark.png";
 import { RiLoader2Line } from "react-icons/ri";
-import downloadIcon from "./mainpage_Assets/download.png";
 import useUserStore from '../../../Zustand_State/UserStore.js';
 import useAuthStore from '../../../Zustand_State/AuthStore.js';
 import LoginG from "../Google_Login/LoginG.jsx";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 
-const allowedExtensions = {
-  Sql: ['.sql', '.txt'],
-  JavaScript: ['.js'],
-  Python: ['.py'],
-  Java: ['.java'],
-};
+
 
 const Mainpage = () => {
   const navigate = useNavigate();
-  const [fileType, setFileType] = useState("Sql");
+  const [fileType, setFileType] = useState("SQL");
   const [file, setFile] = useState(null);
-  const [isConverted, setIsConverted] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [languagelimiterror, setLanguagelimiterror] = useState(false);
   const [formatError, setFormatError] = useState('');
@@ -35,9 +27,15 @@ const Mainpage = () => {
     conRedMessage,
     isLoading,
     setIsLoading,
+    fetchUserStatus,
+    languages, allowedLanguages, extensions,
   } = useUserStore();
 
   const { authUser } = useAuthStore();
+
+  useEffect(() => {
+    fetchUserStatus();
+  }, [fetchUserStatus]);
 
   // Handle Escape key to close login popup
   useEffect(() => {
@@ -54,39 +52,29 @@ const Mainpage = () => {
     navigate("/downloads");
   };
 
-  const isValidExtension = (fileName, language) => {
-    const ext = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
-    return allowedExtensions[language]?.includes(ext);
-  };
-
   const processFileUpload = async (file) => {
     setFormatError('');
     setLanguagelimiterror(false);
     setLineLimitError(false);
     if (!file) return false;
 
-    // Block non-premium users from using other than SQL
-    if (!isPremium && fileType !== 'Sql') {
+
+
+    if (!allowedLanguages.includes(fileType)) {
       setLanguagelimiterror(true);
       setFormatError('');
       return false;
     }
 
-    // Format validation
-    if (!isValidExtension(file.name, fileType)) {
-      setFormatError(`Invalid file format. Expected ${allowedExtensions[fileType].join(', ')}`);
+    // Check if extension is allowed
+    const validExts = extensions[fileType] || [];
+    const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+    if (!validExts.includes(ext)) {
+      setFormatError(`Invalid file format. Allowed: ${validExts.join(', ')}`);
       setLanguagelimiterror(false);
       return false;
     }
 
-    // For free users, check line limit only for SQL
-    if (!isPremium && fileType === 'Sql') {
-      const isAllowed = await validateFileUpload(file);
-      if (!isAllowed) {
-        setFormatError('');
-        return false;
-      }
-    }
 
     // All validations passed
     setFormatError('');
@@ -98,11 +86,11 @@ const Mainpage = () => {
     const selected = e.target.value;
     setFileType(selected);
     setFile(null);
-    setIsConverted(false);
     setFormatError('');
     setLanguagelimiterror(false);
     setLineLimitError(false);
-    if (!isPremium && selected !== 'Sql') {
+
+    if (!allowedLanguages.includes(selected)) {
       setLanguagelimiterror(true);
     } else {
       setLanguagelimiterror(false);
@@ -113,11 +101,7 @@ const Mainpage = () => {
     const uploadedFile = e.target.files[0];
     if (!uploadedFile) return;
     setFile(uploadedFile);
-    setIsConverted(false);
 
-
-
-    // For subsequent uploads or after login, always do real API logic
     setIsLoading(true);
     setLineLimitError('');
     const passedValidation = await processFileUpload(uploadedFile);
@@ -128,50 +112,24 @@ const Mainpage = () => {
 
     await convertFile(uploadedFile, fileType);
     setIsLoading(false);
-    setIsConverted(true);
 
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-
-  const handleDownload = async () => {
-    if (!authUser) {
-      return;
-    }
-    // If already converted for real, allow download
-    if (convertedFile) {
-      const url = window.URL.createObjectURL(convertedFile);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${file.name.replace(/\.[^/.]+$/, "")}_converted.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      return;
-    }
-
-    // If not converted for real, do real conversion now
-    setIsLoading(true);
-    setLineLimitError('');
-    const passedValidation = await processFileUpload(file);
-    if (!passedValidation) {
-      setIsLoading(false);
-      return;
-    }
-    await convertFile(file, fileType);
-    setIsLoading(false);
-    setIsConverted(true);
-  };
+  
 
   // Intercept click on upload area
   const handleUploadAreaClick = (e) => {
-    if (!authUser) {
+    if (!authUser || !allowedLanguages.includes(fileType)) {
       e.preventDefault();
-      setShowLoginPopup(true);
+      setShowLoginPopup(!authUser); // Only show login if not logged in
       return;
     }
-    // If logged in, trigger file input
-    fileInputRef.current && fileInputRef.current.click();
+    // Reset file input value before opening dialog
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
   };
 
   // Intercept drag and drop
@@ -210,15 +168,14 @@ const Mainpage = () => {
             value={fileType}
             onChange={handleFiletypeChange}
           >
-            <option value="Sql">Sql</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="Python">Python</option>
-            <option value="Java">Java</option>
+            {languages.map(lang => (
+              <option key={lang} value={lang}>{lang}</option>
+            ))}
           </select>
         </div>
 
-        <label
-          className={`upload-area ${!isPremium && fileType !== 'Sql' ? 'disabled-upload' : ''}`}
+        <div
+          className={`upload-area ${!allowedLanguages.includes(fileType) ? 'disabled-upload' : ''}`}
           onClick={handleUploadAreaClick}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -241,7 +198,10 @@ const Mainpage = () => {
             </span>
             or Drag and Drop File or Image.
             <span className="file-info">
-              Zip, .txt, .png (max: 10MB). Up to 400 lines of code allowed.
+              {fileType && extensions[fileType]
+                ? `Allowed: ${extensions[fileType].join(", ")}`
+                : ""}
+              &nbsp; (max: 10MB). Up to 400 lines of code allowed.
             </span>
           </span>
           <input
@@ -253,14 +213,14 @@ const Mainpage = () => {
             ref={fileInputRef}
             style={{ display: "none" }}
           />
-        </label>
+        </div>
 
         {/* Error messages */}
         {lineLimitError && <p className='error-text'> {lineLimitError} </p>}
         {formatError && <p className="error-text">{formatError}</p>}
         {languagelimiterror && (
           <p style={{ color: 'red', marginTop: '8px' }}>
-            Free version only supports SQL conversion. Upgrade to use other languages.
+            This language is not allowed for your account. Allowed: {allowedLanguages.join(", ")}
           </p>
         )}
 

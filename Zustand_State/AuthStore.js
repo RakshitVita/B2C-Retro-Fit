@@ -15,7 +15,7 @@ const useAuthStore = create((set) => (
         isLoggingIn:false,
 
         checkAuth: async () => {
-             console.log("checkAuth called");
+            
             set({ isChecking: true });
             try {
                 const token = Cookies.get("access_token");
