@@ -34,11 +34,14 @@ const Mainpage = () => {
 
   const { authUser } = useAuthStore();
 
-  useEffect(() => {
-    if (authUser) {
-      fetchUserStatus();
-    }
-  }, [authUser, fetchUserStatus]);
+const calledRef = useRef(false);
+
+useEffect(() => {
+  if (authUser && !calledRef.current) {
+    fetchUserStatus();
+    calledRef.current = true;
+  }
+}, [authUser]);
 
   // Handle Escape key to close login popup
   useEffect(() => {
