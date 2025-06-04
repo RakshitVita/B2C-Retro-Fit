@@ -1,18 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Maincontainer from "../Template_container/Maincontainer";
 import { FiDownload } from "react-icons/fi";
-import useUserStore from "../../../Zustand_State/UserStore";
 import "react-toastify/dist/ReactToastify.css";
 import "./Download.scss";
-import UserStore from "../../../Zustand_State/UserStore";
+import useUserStore from "../../../Zustand_State/UserStore";
+import useAuthStore from "../../../Zustand_State/AuthStore";
 
 const Download = () => {
   const { downloads, downloadsLoading, fetchDownloads, getAndDownloadFile } =
-    UserStore();
+    useUserStore();
+  const { authUser } = useAuthStore();
 
   useEffect(() => {
-    fetchDownloads();
-  }, [fetchDownloads]);
+    if (authUser ) {
+      fetchDownloads();
+    }
+  }, [authUser,fetchDownloads]);
 
   return (
     <Maincontainer>
