@@ -145,13 +145,21 @@ const useUserStore = create((set) => ({
 
   fetchDownloads: async () => {
     set({ downloadsLoading: true });
-    try {
-      const response = await axiosInstance.get("http://127.0.0.1:8890/get_all_files");
-      set({ downloads: response.data, downloadsLoading: false });
-    } catch (error) {
-      console.error("Failed to fetch downloads:", error);
-      set({ downloads: [], downloadsLoading: false });
-    }
+try {
+    const token = Cookies.get("access_token");
+    const email = getEmailFromCookie();
+    const response = await axiosInstance.post(
+      "/get_all_files",
+      { email }, // <-- send email in body
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }
+    );
+    set({ downloads: response.data, downloadsLoading: false });
+  } catch (error) {
+    console.error("Failed to fetch downloads:", error);
+    set({ downloads: [], downloadsLoading: false });
+  }
   },
 
   getAndDownloadFile: async (filename) => {
