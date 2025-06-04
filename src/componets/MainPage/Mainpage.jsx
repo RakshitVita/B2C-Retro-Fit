@@ -11,7 +11,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 const Mainpage = () => {
   const navigate = useNavigate();
-  const [fileType, setFileType] = useState("SQL");
+  const [fileType, setFileType] = useState("Sql");
   const [file, setFile] = useState(null);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [languagelimiterror, setLanguagelimiterror] = useState(false);
@@ -29,13 +29,16 @@ const Mainpage = () => {
     setIsLoading,
     fetchUserStatus,
     languages, allowedLanguages, extensions,
+    UserStatusLoading,
   } = useUserStore();
 
   const { authUser } = useAuthStore();
 
   useEffect(() => {
-    fetchUserStatus();
-  }, [fetchUserStatus]);
+    if (authUser) {
+      fetchUserStatus();
+    }
+  }, [authUser, fetchUserStatus]);
 
   // Handle Escape key to close login popup
   useEffect(() => {
@@ -116,7 +119,7 @@ const Mainpage = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  
+
 
   // Intercept click on upload area
   const handleUploadAreaClick = (e) => {
@@ -148,6 +151,14 @@ const Mainpage = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
   };
+  if (UserStatusLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <RiLoader2Line className="size-10 animate-spin" />
+        <p>Loading user status...</p>
+      </div>
+    );
+  }
 
   return (
     <>

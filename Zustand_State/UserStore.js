@@ -1,17 +1,32 @@
 import { create } from 'zustand';
 import { axiosInstance } from '../AxiosInstance/axios_instance';
 import Cookies from "js-cookie";
+import toast from 'react-hot-toast';
 
+function getEmailFromCookie() {
+  try {
+    const userCookie = Cookies.get("user");
+    if (!userCookie) return null;
+    const user = JSON.parse(userCookie);
+    return user.email || null;
+  } catch {
+    return null;
+  }
+}
 const useUserStore = create((set) => ({
 
   isPremium: false,
-  languages: [],
-  allowedLanguages: [],
-  extensions: {},
+  languages: ["Sql", "JavaScript"],
+  allowedLanguages: ["Sql"],
+  extensions: {
+    "Sql": [".sql", ".txt"],
+    "JavaScript": [".js"]
+  },
   isLoading: true,
   error: null,
   lineLimitError: '',
   conRedMessage: '',
+  UserStatusLoading:false,
 
   downloads: [], // <--- Make sure this is an array, not undefined
   downloadsLoading: false,
@@ -20,7 +35,14 @@ const useUserStore = create((set) => ({
   setLineLimitError: (msg) => set({ lineLimitError: msg }),
 
   fetchUserStatus: async () => {
-    set({ isLoading: true, error: null });
+    set({
+      UserStatusLoading: true,
+      error: null,
+      languages: [],
+      allowedLanguages: [],
+      extensions: {},
+      
+    });
     const token = Cookies.get("access_token");
 
     try {
@@ -36,7 +58,7 @@ const useUserStore = create((set) => ({
         languages: response.data?.languages || [],
         allowedLanguages: response.data?.allowed_languages || [],
         extensions: response.data?.extensions || {},
-        isLoading: false,
+        UserStatusLoading: false,
       });
     } catch (err) {
       console.error('Failed to fetch user status:', err);
@@ -55,6 +77,7 @@ const useUserStore = create((set) => ({
   validateFileUpload: async (file) => {
     const state = useUserStore.getState();
     const token = Cookies.get("access_token");
+    const email = getEmailFromCookie();
     // Premium users skip validation
     if (state.isPremium) {
       set({ lineLimitError: '' });
@@ -63,6 +86,7 @@ const useUserStore = create((set) => ({
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('email', email || '');
 
     try {
       const response = await axiosInstance.post(
@@ -95,8 +119,11 @@ const useUserStore = create((set) => ({
     //getting token from cookies
     const token = Cookies.get("access_token");
     const formData = new FormData();
+    const email = getEmailFromCookie();
+
     formData.append('file', file);
     formData.append('language', language);
+    formData.append('email', email || ''); // Ensure email is always sent
 
     try {
       const response = await axiosInstance.post(
@@ -124,6 +151,51 @@ const useUserStore = create((set) => ({
     } catch (error) {
       console.error("Failed to fetch downloads:", error);
       set({ downloads: [], downloadsLoading: false });
+    }
+  },
+
+  getAndDownloadFile: async (filename) => {
+    try {
+      const token = Cookies.get("access_token");
+      const email = getEmailFromCookie();
+      const response = await axiosInstance.post(
+        "/download",
+        { filename, email }, // email in body
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            "Content-Type": "application/json"
+          },
+          responseType: "blob",
+        }
+      );
+      // Always use the filename from backend if present
+      const disposition = response.headers['content-disposition'];
+      let downloadName = "downloaded_file";
+      if (disposition && disposition.includes('filename=')) {
+        downloadName = disposition
+          .split('filename=')[1]
+          .replace(/['"]/g, '')
+          .trim();
+      }
+      if (!downloadName) {
+        // fallback if header is missing
+        downloadName = "downloaded_file.pdf";
+      }
+      const contentType = response.headers['content-type'] || 'application/octet-stream';
+      const blob = new Blob([response.data], { type: contentType });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = downloadName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("File downloaded successfully");
+    } catch (error) {
+      console.error("Download failed:", error);
+      toast.error("File Downloading failed. Please try again.");
     }
   },
 
