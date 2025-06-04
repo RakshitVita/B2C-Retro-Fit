@@ -7,7 +7,7 @@ import LoginG from "../Google_Login/LoginG.jsx";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 
-
+let hasFetchedUserStatusGlobal = false;
 
 const Mainpage = () => {
   const navigate = useNavigate();
@@ -34,14 +34,15 @@ const Mainpage = () => {
 
   const { authUser } = useAuthStore();
 
-const calledRef = useRef(false);
-
-useEffect(() => {
-  if (authUser && !calledRef.current) {
-    fetchUserStatus();
-    calledRef.current = true;
-  }
-}, [authUser]);
+  useEffect(() => {
+    if (authUser && !hasFetchedUserStatusGlobal) {
+      fetchUserStatus();
+      hasFetchedUserStatusGlobal = true;
+    }
+    if (!authUser) {
+      hasFetchedUserStatusGlobal = false;
+    }
+  }, [authUser, fetchUserStatus]);
 
   // Handle Escape key to close login popup
   useEffect(() => {
