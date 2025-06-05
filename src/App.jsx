@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, useLocation,useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navbar from './componets/Navbar/Navbar'
 import Mainpage from "./componets/MainPage/Mainpage";
 import Download from "./componets/Downloads/Download";
@@ -35,11 +35,15 @@ const App = () => {
 
   return (
     <>
-      <Toaster position="top-center" />
+      <Toaster position="top-center"
+        toastOptions={{
+          duration: 5000, // <-- set global duration (in ms)
+        }}
+      />
       <Router>
         <Navbar
           notifications={notifications}
-          filenumber={filenumber}/>
+          filenumber={filenumber} />
         <AppRoutes authUser={authUser} />
       </Router>
     </>
@@ -51,7 +55,7 @@ const AppRoutes = ({ authUser }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
-    const handleLoginClose = () => {
+  const handleLoginClose = () => {
     navigate("/");
   };
 
@@ -63,7 +67,7 @@ const AppRoutes = ({ authUser }) => {
         <Route path="/subscriptions" element={<Subscription_section />} />
       </Routes>
       {/* Show login popup only if NOT on home and NOT logged in */}
-      {!authUser && !isHome && <LoginG asModal={true} onClose={handleLoginClose}/>}
+      {!authUser && !isHome && <LoginG asModal={true} onClose={handleLoginClose} />}
     </>
   );
 };

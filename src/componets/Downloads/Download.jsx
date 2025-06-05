@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import Maincontainer from "../Template_container/Maincontainer";
-import { FiDownload } from "react-icons/fi";
+import { FiDownload, FiLoader } from "react-icons/fi";
 import "react-toastify/dist/ReactToastify.css";
 import "./Download.scss";
 import useUserStore from "../../../Zustand_State/UserStore";
 import useAuthStore from "../../../Zustand_State/AuthStore";
 
 const Download = () => {
-  const { downloads, downloadsLoading, fetchDownloads, getAndDownloadFile } =
+  const { downloads, downloadsLoading, fetchDownloads, getAndDownloadFile, isDownloading } =
     useUserStore();
   const { authUser } = useAuthStore();
 
@@ -47,8 +47,13 @@ const Download = () => {
                       <button
                         className="download-btn"
                         onClick={() => getAndDownloadFile(entry.filename, entry.file_id)}
+                        disabled={isDownloading}
                       >
-                        <FiDownload />
+                        {isDownloading ? (
+                          <FiLoader className="animate-spin" />
+                        ) : (
+                          <FiDownload />
+                        )}
                       </button>
                     ) : (
                       <span style={{ color: "#aaa" }}>N/A</span>

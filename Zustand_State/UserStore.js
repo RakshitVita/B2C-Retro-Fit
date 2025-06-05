@@ -23,6 +23,7 @@ const useUserStore = create((set) => ({
     "JavaScript": [".js"]
   },
   isLoading: true,
+  isDownloading:false,
   error: null,
   lineLimitError: '',
   conRedMessage: '',
@@ -163,6 +164,7 @@ try {
   },
 
   getAndDownloadFile: async (filename,fileId) => {
+    set({isDownloading:true});
     try {
       const token = Cookies.get("access_token");
       const email = getEmailFromCookie();
@@ -200,12 +202,33 @@ try {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
+      set({ isDownloading: false });
       toast.success("File downloaded successfully");
+
     } catch (error) {
       console.error("Download failed:", error);
+      set({ isDownloading: false });
       toast.error("File Downloading failed. Please try again.");
     }
   },
+
+    resetUserState: () => set({
+    isPremium: false,
+    languages: ["Python", "JavaScript"],
+    allowedLanguages: ["Python"],
+    extensions: {
+      "Python": [".py", ".txt"],
+      "JavaScript": [".js"]
+    },
+    isLoading: true,
+    isDownloading: false,
+    error: null,
+    lineLimitError: '',
+    conRedMessage: '',
+    UserStatusLoading: false,
+    downloads: [],
+    downloadsLoading: false,
+  }),
 
 }));
 

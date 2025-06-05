@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../AxiosInstance/axios_instance";
+import useUserStore from "./UserStore";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie"
 
@@ -12,10 +13,10 @@ const useAuthStore = create((set) => (
         // },
         authUser: null,
         isChecking: false,
-        isLoggingIn:false,
+        isLoggingIn: false,
 
         checkAuth: async () => {
-            
+
             set({ isChecking: true });
             try {
                 const token = Cookies.get("access_token");
@@ -35,7 +36,7 @@ const useAuthStore = create((set) => (
             }
         },
         signup: async (data) => {
-             set({ isLoggingIn: true });
+            set({ isLoggingIn: true });
             try {
                 const res = await axiosInstance.post("/auth/signup", { id_token: data });
                 set({ authUser: res.data.user });
@@ -52,7 +53,7 @@ const useAuthStore = create((set) => (
                     expires: 7
                 });
 
-                set({ authUser: res.data.user ,isLoggingIn:false});
+                set({ authUser: res.data.user, isLoggingIn: false });
                 // set({ authUser: data });
                 // Cookies.set("access_token", data, {
                 //     path: "/",
@@ -62,7 +63,7 @@ const useAuthStore = create((set) => (
                 // });
                 toast.success("Logged in successfully");
             } catch (error) {
-                  set({ authUser: null, isChecking: false });
+                set({ authUser: null, isChecking: false });
                 toast.error(error.response?.data?.message || "Failed Sign up");
             }
         },
@@ -73,6 +74,7 @@ const useAuthStore = create((set) => (
                 set({ authUser: null });
                 Cookies.remove('access_token');
                 Cookies.remove('user');
+                useUserStore.getState().resetUserState();
                 toast.success("Logged out successfully");
             } catch (error) {
                 toast.error(error.response.data.message);

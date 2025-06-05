@@ -44,16 +44,18 @@ const Mainpage = () => {
     }
   }, [authUser, fetchUserStatus]);
 
-  // Handle Escape key to close login popup
+  // Reset state when user logs out or changes
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') setShowLoginPopup(false);
-    };
-    if (showLoginPopup) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
-    }
-  }, [showLoginPopup]);
+  if(!authUser){
+    setFileType("Python");
+    setFile(null);
+    setShowLoginPopup(false);
+    setLanguagelimiterror(false);
+    setFormatError('');
+    setLineLimitError('');
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+  }, [authUser, setLineLimitError])
 
   const handleGoToDownloads = () => {
     navigate("/downloads");
