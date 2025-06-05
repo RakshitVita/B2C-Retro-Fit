@@ -19,31 +19,25 @@ const LoginG = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-10 max-w-md w-full shadow-lg text-center relative">
+    <div className="login-modal-backdrop">
+      <div className="login-modal-content">
         {/* Cross Icon */}
         <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl"
+          className="login-modal-close"
           onClick={onClose}
           aria-label="Close"
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            lineHeight: 1,
-          }}
         >
           &times;
         </button>
         <img
           src={logoPath}
           alt="Retro Fit Logo"
-          className="mx-auto mb-4 w-20 h-20 object-contain"
+          className="login-modal-logo"
         />
-        <h2 className="text-2xl font-bold mb-6 text-gray-900">
-          Welcome to <span className="text-blue-700">RETRO FIT</span>
+        <h2 className="login-modal-title">
+          Welcome to <span className="highlight">RETRO FIT</span>
         </h2>
-        <div className="flex justify-center">
+        <div className="login-modal-google">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}

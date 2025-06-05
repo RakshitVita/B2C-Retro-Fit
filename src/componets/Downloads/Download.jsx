@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Maincontainer from "../Template_container/Maincontainer";
 import { FiDownload, FiLoader } from "react-icons/fi";
-import "react-toastify/dist/ReactToastify.css";
 import "./Download.scss";
 import useUserStore from "../../../Zustand_State/UserStore";
 import useAuthStore from "../../../Zustand_State/AuthStore";
