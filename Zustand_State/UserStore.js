@@ -45,9 +45,10 @@ const useUserStore = create((set) => ({
       
     });
     const token = Cookies.get("access_token");
-
+    const email = getEmailFromCookie();
     try {
-      const response = await axiosInstance.get('/api/user/status',
+      const response = await axiosInstance.post('/api/user/status',
+        {email},
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
