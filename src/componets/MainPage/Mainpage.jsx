@@ -11,7 +11,7 @@ let hasFetchedUserStatusGlobal = false;
 
 const Mainpage = () => {
   const navigate = useNavigate();
-  const [fileType, setFileType] = useState("Sql");
+  const [fileType, setFileType] = useState("Python");
   const [file, setFile] = useState(null);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [languagelimiterror, setLanguagelimiterror] = useState(false);

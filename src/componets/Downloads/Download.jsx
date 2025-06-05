@@ -12,10 +12,10 @@ const Download = () => {
   const { authUser } = useAuthStore();
 
   useEffect(() => {
-    if (authUser ) {
+    if (authUser) {
       fetchDownloads();
     }
-  }, [authUser,fetchDownloads]);
+  }, [authUser, fetchDownloads]);
 
   return (
     <Maincontainer>
@@ -41,11 +41,12 @@ const Download = () => {
                   <td>{entry.filename}</td>
                   <td>{entry.file_size}</td>
                   <td>{entry.code_lines}</td>
+                  <td style={{ display: "none" }}>{entry.file_id}</td>
                   <td>
                     {entry.url ? (
                       <button
                         className="download-btn"
-                        onClick={() => getAndDownloadFile(entry.filename)}
+                        onClick={() => getAndDownloadFile(entry.filename, entry.file_id)}
                       >
                         <FiDownload />
                       </button>

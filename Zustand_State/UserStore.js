@@ -16,10 +16,10 @@ function getEmailFromCookie() {
 const useUserStore = create((set) => ({
 
   isPremium: false,
-  languages: ["Sql", "JavaScript"],
-  allowedLanguages: ["Sql"],
+  languages: ["Python", "JavaScript"],
+  allowedLanguages: ["Python"],
   extensions: {
-    "Sql": [".sql", ".txt"],
+    "Python": [".py", ".txt"],
     "JavaScript": [".js"]
   },
   isLoading: true,
@@ -162,13 +162,13 @@ try {
   }
   },
 
-  getAndDownloadFile: async (filename) => {
+  getAndDownloadFile: async (filename,fileId) => {
     try {
       const token = Cookies.get("access_token");
       const email = getEmailFromCookie();
       const response = await axiosInstance.post(
         "/download",
-        { filename, email }, // email in body
+        { filename, email,fileId }, // email in body
         {
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
