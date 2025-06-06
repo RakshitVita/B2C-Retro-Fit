@@ -29,6 +29,7 @@ const useUserStore = create((set) => ({
   conRedMessage: '',
   UserStatusLoading:false,
 
+
   downloads: [], // <--- Make sure this is an array, not undefined
   downloadsLoading: false,
 
@@ -158,6 +159,7 @@ try {
       }
     );
     set({ downloads: response.data, downloadsLoading: false });
+    console.log(response.data);
   } catch (error) {
     console.error("Failed to fetch downloads:", error);
     set({ downloads: [], downloadsLoading: false });

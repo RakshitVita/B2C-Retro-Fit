@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Maincontainer from "../Template_container/Maincontainer";
 import { FiDownload, FiLoader } from "react-icons/fi";
 import "./Download.scss";
@@ -6,15 +6,22 @@ import useUserStore from "../../../Zustand_State/UserStore";
 import useAuthStore from "../../../Zustand_State/AuthStore";
 
 const Download = () => {
-  const { downloads, downloadsLoading, fetchDownloads, getAndDownloadFile, isDownloading } =
+  const { downloads, downloadsLoading, fetchDownloads, getAndDownloadFile } =
     useUserStore();
   const { authUser } = useAuthStore();
+  const [downloadingId, setDownloadingId] = useState(null);
 
   useEffect(() => {
     if (authUser) {
       fetchDownloads();
     }
   }, [authUser, fetchDownloads]);
+
+  const handleDownload = async (filename, fileId) => {
+    setDownloadingId(fileId);
+    await getAndDownloadFile(filename, fileId);
+    setDownloadingId(null);
+  };
 
   return (
     <Maincontainer>
@@ -45,11 +52,11 @@ const Download = () => {
                     {entry.url ? (
                       <button
                         className="download-btn"
-                        onClick={() => getAndDownloadFile(entry.filename, entry.file_id)}
-                        disabled={isDownloading}
+                        onClick={() => handleDownload(entry.filename, entry.file_id)}
+                        disabled={downloadingId === entry.file_id}
                       >
-                        {isDownloading ? (
-                          <FiLoader className="animate-spin" />
+                        {downloadingId === entry.file_id ? (
+                          <FiLoader  style={{ animation: "spin 1s linear infinite" }} />
                         ) : (
                           <FiDownload />
                         )}
