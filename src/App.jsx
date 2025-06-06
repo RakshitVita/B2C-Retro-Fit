@@ -19,8 +19,8 @@ const App = () => {
 
   if (!authUser && (isChecking || isLoggingIn))
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader className="size-10 animate-spin" />
+      <div className="loader-container">
+        <Loader className="loader-icon" />
       </div>
     );
 

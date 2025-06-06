@@ -159,8 +159,8 @@ const Mainpage = () => {
   };
   if (UserStatusLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <RiLoader2Line className="size-10 animate-spin" />
+      <div className="loader-fullscreen">
+        <RiLoader2Line className="loader-icon" />
         <p>Loading user status...</p>
       </div>
     );
