@@ -47,7 +47,7 @@ const Mainpage = () => {
   // Reset state when user logs out or changes
   useEffect(() => {
   if(!authUser){
-    setFileType("Python");
+    setFileType("python");
     setFile(null);
     setShowLoginPopup(false);
     setLanguagelimiterror(false);

@@ -19,8 +19,8 @@ const useUserStore = create((set) => ({
   languages: ["python", "javaScript"],
   allowedLanguages: ["python"],
   extensions: {
-    "Python": [".py", ".txt"],
-    "JavaScript": [".js"]
+    "python": [".py", ".txt"],
+    "javascript": [".js"]
   },
   isLoading: true,
   isDownloading:false,
@@ -222,10 +222,10 @@ try {
 
     resetUserState: () => set({
     isPremium: false,
-    languages: ["Python", "JavaScript"],
-    allowedLanguages: ["Python"],
+    languages: ["python", "javascript"],
+    allowedLanguages: ["python"],
     extensions: {
-      "Python": [".py", ".txt"],
+      "python": [".py", ".txt"],
       "JavaScript": [".js"]
     },
     isLoading: true,
