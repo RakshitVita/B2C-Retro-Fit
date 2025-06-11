@@ -16,8 +16,8 @@ function getEmailFromCookie() {
 const useUserStore = create((set) => ({
 
   isPremium: false,
-  languages: ["Python", "JavaScript"],
-  allowedLanguages: ["Python"],
+  languages: ["python", "javaScript"],
+  allowedLanguages: ["python"],
   extensions: {
     "Python": [".py", ".txt"],
     "JavaScript": [".js"]
@@ -61,8 +61,11 @@ const useUserStore = create((set) => ({
         languages: response.data?.languages || [],
         allowedLanguages: response.data?.allowed_languages || [],
         extensions: response.data?.extensions || {},
+        credit_remaining:response.data?.credit_remaining || {},
+        credit_usage:response.data?.credit_usage|| {},
         UserStatusLoading: false,
       });
+      console.log(response.data?.credit_remaining, response.data?.credit_usage);
     } catch (err) {
       console.error('Failed to fetch user status:', err);
       set({
@@ -72,6 +75,8 @@ const useUserStore = create((set) => ({
         languages: [],
         allowedLanguages: [],
         extensions: {},
+        credit_remaining: {},
+        credit_usage:{},
         isLoading: false,
       });
     }

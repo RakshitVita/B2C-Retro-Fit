@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import "./Navbar.css";
 import useAuthStore from "../../../Zustand_State/AuthStore";
+import CreditLoader from "../CreditLoader/CreditLoader";
 
 const Navbar = ({
   notifications = [],
@@ -92,10 +93,16 @@ const Navbar = ({
                   <strong>Email: </strong>{authUser.email || ""}
                 </p>
                 <button className="logout_button" onClick={logout}>LogOut</button>
+                <CreditLoader/>
               </>
+              
             ) : (
               <p>No user info</p>
-            )}
+            )
+            
+            
+            }
+
           </div>
         </div>
       </div>
