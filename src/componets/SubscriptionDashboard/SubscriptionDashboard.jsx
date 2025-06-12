@@ -24,7 +24,7 @@ const SubscriptionDashboard = () => {
       <div className="profile-card">
         {authUser && authUser.picture && (
           <>
-            <img src={authUser.picture} alt="Profile" className="profile-pic" />
+            <img src={authUser.picture || "../public/assets/noProfirle.svg"} alt="Profile" className="profile-pic" />
             <div className="profile-details">
               <div className="profile-name">{authUser.name}</div>
               <div className="profile-email">{authUser.email}</div>
