@@ -1,4 +1,4 @@
-    * {
+* {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -15,11 +15,14 @@
       /* box-shadow: 0 6px 20px rgba(77, 37, 222, 0.1); */
     }
  
-    h1 {
-      text-align: center;
-      color:#322951;
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #322951;
       margin-bottom: 35px;
       font-size: 26px;
+      gap: 12px;
     }
  
     .profile-card {
@@ -226,9 +229,10 @@
       background: linear-gradient(to right,#322951, #7c5fe6);
     }
 
-    .subscriptionimg{
-        width: 4%;
-        margin-left: 300px;
+    .subscriptionimg {
+      width: 36px;
+      height: 36px;
+      margin: 0 12px 0 0; /* Only right margin */
     }
  
     @media (max-width: 768px) {

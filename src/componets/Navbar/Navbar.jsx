@@ -78,9 +78,19 @@ const Navbar = ({
           )}
           <div
             className="dropdown-content"
-            style={{ display: dropdownOpen ? "block" : "none" }}>
-            <button className="dropdown-btn">Check Usage</button> <br />
-            <button className=" logout" onClick={logout}>Logout</button>
+            style={{ display: dropdownOpen ? "block" : "none" }}
+          >
+            <button className="dropdown-btn"  onClick={() => {
+    setDropdownOpen(false);
+    navigate("/SubscriptionDashboard");
+  }}>
+              Check Usage
+            </button>
+            
+            <button className="dropdown-btn logout-btn" onClick={logout}>
+            
+              Logout
+            </button>
           </div>
         </div>
       </div>

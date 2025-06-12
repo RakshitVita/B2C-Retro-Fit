@@ -37,7 +37,10 @@ const SubscriptionDashboard = () => {
 
       </div>
 
-      <h1 className="title"><img class='subscriptionimg' src="../public/assets/Subscription.png" alt="" /> Subscription Usage Overview</h1>
+      <h1 className="title">
+  <img className="subscriptionimg" src="../public/assets/Subscription.png" alt="" />
+  Subscription Usage Overview
+</h1>
 
       <div className="language-grid">
         {Languages && Languages.map((lang) => (
