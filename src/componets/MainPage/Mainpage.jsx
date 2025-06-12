@@ -22,7 +22,6 @@ const Mainpage = () => {
     isPremium,
     lineLimitError,
     setLineLimitError,
-    validateFileUpload,
     convertFile,
     conRedMessage,
     isLoading,

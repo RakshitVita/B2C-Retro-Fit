@@ -82,45 +82,45 @@ const useUserStore = create((set) => ({
     }
   },
 
-  validateFileUpload: async (file) => {
-    const state = useUserStore.getState();
-    const token = Cookies.get("access_token");
-    const email = getEmailFromCookie();
-    // Premium users skip validation
-    if (state.isPremium) {
-      set({ lineLimitError: '' });
-      return true;
-    }
+  // validateFileUpload: async (file) => {
+  //   const state = useUserStore.getState();
+  //   const token = Cookies.get("access_token");
+  //   const email = getEmailFromCookie();
+  //   // Premium users skip validation
+  //   if (state.isPremium) {
+  //     set({ lineLimitError: '' });
+  //     return true;
+  //   }
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('email', email || '');
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('email', email || '');
 
-    try {
-      const response = await axiosInstance.post(
-        '/api/validate-file-lines',
-        formData,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        }
-      );
+  //   try {
+  //     const response = await axiosInstance.post(
+  //       '/api/validate-file-lines',
+  //       formData,
+  //       {
+  //         headers: token ? { Authorization: `Bearer ${token}` } : {},
+  //       }
+  //     );
 
 
-      const { valid, message } = response.data;
+  //     const { valid, message } = response.data;
 
-      if (!valid) {
-        set({ lineLimitError: message });
-        return false;
-      }
+  //     if (!valid) {
+  //       set({ lineLimitError: message });
+  //       return false;
+  //     }
 
-      set({ lineLimitError: '' });
-      return true;
-    } catch (error) {
-      console.error("Validation failed", error);
-      set({ lineLimitError: 'Failed to validate file.' });
-      return false;
-    }
-  },
+  //     set({ lineLimitError: '' });
+  //     return true;
+  //   } catch (error) {
+  //     console.error("Validation failed", error);
+  //     set({ lineLimitError: 'Failed to validate file.' });
+  //     return false;
+  //   }
+  // },
 
   convertFile: async (file, language) => {
     set({ isLoading: true, error: null });

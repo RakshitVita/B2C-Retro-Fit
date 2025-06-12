@@ -69,7 +69,7 @@ const Navbar = ({
         <div className="profile-dropdown" ref={dropdownRef}>
           {authUser && authUser.picture && (
             <img
-              src={authUser.picture}
+              src={authUser.picture || "../public/assets/noProfirle.svg"}
               alt="User profile"
               className="profile-img"
               onClick={() => setDropdownOpen((open) => !open)}

@@ -38,7 +38,7 @@ const SubscriptionDashboard = () => {
       </div>
 
       <h1 className="title">
-  <img className="subscriptionimg" src="../public/assets/Subscription.png" alt="" />
+  <img className="subscriptionimg" src="../assets/Subscription.png" alt="" />
   Subscription Usage Overview
 </h1>
 
