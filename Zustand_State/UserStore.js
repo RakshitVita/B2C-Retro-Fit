@@ -220,6 +220,15 @@ try {
     }
   },
 
+  usageDetail:async()=>{
+    try {
+      const response =await axiosInstance.get('/usage-data')
+      set({Languages:response.data})
+    } catch (error) {
+      set({Languages:['']})
+    }
+  },
+
     resetUserState: () => set({
     isPremium: false,
     languages: ["python", "javascript"],

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import "./Navbar.css";
 import useAuthStore from "../../../Zustand_State/AuthStore";
-import CreditLoader from "../CreditLoader/CreditLoader";
 
 const Navbar = ({
   notifications = [],
@@ -50,11 +49,6 @@ const Navbar = ({
 
       {/* Right Actions */}
       <div className="action-buttons">
-        {authUser &&
-          <button className="btn">
-            Try {filenumber}/4  Conversions for Free
-          </button>
-        }
         {/* Notifications */}
         {authUser &&
           <div className="icon-dropdown">
@@ -84,25 +78,9 @@ const Navbar = ({
           )}
           <div
             className="dropdown-content"
-            style={{ display: dropdownOpen ? "block" : "none" }}
-          >
-            {authUser ? (
-              <>
-                <p>
-                  <strong>Name: </strong>{authUser.name || ""} <br />
-                  <strong>Email: </strong>{authUser.email || ""}
-                </p>
-                <button className="logout_button" onClick={logout}>LogOut</button>
-                <CreditLoader/>
-              </>
-              
-            ) : (
-              <p>No user info</p>
-            )
-            
-            
-            }
-
+            style={{ display: dropdownOpen ? "block" : "none" }}>
+            <button className="dropdown-btn">Check Usage</button> <br />
+            <button className=" logout" onClick={logout}>Logout</button>
           </div>
         </div>
       </div>
