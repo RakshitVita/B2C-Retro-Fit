@@ -23,11 +23,12 @@ const useUserStore = create((set) => ({
     "javascript": [".js"]
   },
   isLoading: true,
-  isDownloading:false,
+  isDownloading: false,
+  isLoaSubscriction:false,
   error: null,
   lineLimitError: '',
   conRedMessage: '',
-  UserStatusLoading:false,
+  UserStatusLoading: false,
 
 
   downloads: [], // <--- Make sure this is an array, not undefined
@@ -43,13 +44,13 @@ const useUserStore = create((set) => ({
       languages: [],
       allowedLanguages: [],
       extensions: {},
-      
+
     });
     const token = Cookies.get("access_token");
     const email = getEmailFromCookie();
     try {
       const response = await axiosInstance.post('/api/user/status',
-        {email},
+        { email },
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
@@ -61,11 +62,8 @@ const useUserStore = create((set) => ({
         languages: response.data?.languages || [],
         allowedLanguages: response.data?.allowed_languages || [],
         extensions: response.data?.extensions || {},
-        credit_remaining:response.data?.credit_remaining || {},
-        credit_usage:response.data?.credit_usage|| {},
         UserStatusLoading: false,
       });
-      console.log(response.data?.credit_remaining, response.data?.credit_usage);
     } catch (err) {
       console.error('Failed to fetch user status:', err);
       set({
@@ -76,7 +74,7 @@ const useUserStore = create((set) => ({
         allowedLanguages: [],
         extensions: {},
         credit_remaining: {},
-        credit_usage:{},
+        credit_usage: {},
         isLoading: false,
       });
     }
@@ -153,32 +151,32 @@ const useUserStore = create((set) => ({
 
   fetchDownloads: async () => {
     set({ downloadsLoading: true });
-try {
-    const token = Cookies.get("access_token");
-    const email = getEmailFromCookie();
-    const response = await axiosInstance.post(
-      "/get_all_files",
-      { email }, // <-- send email in body
-      {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      }
-    );
-    set({ downloads: response.data, downloadsLoading: false });
-    console.log(response.data);
-  } catch (error) {
-    console.error("Failed to fetch downloads:", error);
-    set({ downloads: [], downloadsLoading: false });
-  }
+    try {
+      const token = Cookies.get("access_token");
+      const email = getEmailFromCookie();
+      const response = await axiosInstance.post(
+        "/get_all_files",
+        { email }, // <-- send email in body
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      set({ downloads: response.data, downloadsLoading: false });
+      console.log(response.data);
+    } catch (error) {
+      console.error("Failed to fetch downloads:", error);
+      set({ downloads: [], downloadsLoading: false });
+    }
   },
 
-  getAndDownloadFile: async (filename,fileId) => {
-    set({isDownloading:true});
+  getAndDownloadFile: async (filename, fileId) => {
+    set({ isDownloading: true });
     try {
       const token = Cookies.get("access_token");
       const email = getEmailFromCookie();
       const response = await axiosInstance.post(
         "/download",
-        { filename, email,fileId }, // email in body
+        { filename, email, fileId }, // email in body
         {
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -220,16 +218,29 @@ try {
     }
   },
 
-  usageDetail:async()=>{
+  usageDetail: async () => {
+    set({ isLoaSubscriction: true })
+    const token = Cookies.get("access_token");
+    const email = getEmailFromCookie();
     try {
-      const response =await axiosInstance.get('/usage-data')
-      set({Languages:response.data})
+      const response = await axiosInstance.post('/get_user_info',
+        { email }, // email in body
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        }
+      );
+      set({ Languages: response.data ,  isLoaSubscriction: false })
+      console.log(response.data);
     } catch (error) {
-      set({Languages:['']})
+      set({ Languages: [''] , isLoaSubscriction: false })
+      console.error("Failed to Load", error);
+      toast.error("Faild to Load Data");
     }
   },
 
-    resetUserState: () => set({
+  resetUserState: () => set({
     isPremium: false,
     languages: ["python", "javascript"],
     allowedLanguages: ["python"],

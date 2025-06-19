@@ -1,0 +1,9 @@
+/* CircularProgress.css */
+/* .circular-progress {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+} */
+
+.progress-ring {
+  transition: stroke-dashoffset 2s ease;
+}

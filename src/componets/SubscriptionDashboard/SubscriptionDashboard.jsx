@@ -2,22 +2,38 @@ import React, { useEffect, useState } from "react";
 import "./SubscriptionDashboard.css";
 import useAuthStore from "../../../Zustand_State/AuthStore";
 import useUserStore from "../../../Zustand_State/UserStore";
+import CircularProgress from "../../ReusableComponents/CircularProgress/CircularProgress";
 
 const SubscriptionDashboard = () => {
 
   const [selectedLang, setSelectedLang] = useState(null);
+  const [loaderKey, setLoaderKey] = useState(0);
 
   const { authUser } = useAuthStore();
-  const{usageDetail,Languages}=useUserStore();
+  const { usageDetail, Languages } = useUserStore();
 
   useEffect(() => {
-  usageDetail();
+    usageDetail();
   }, [usageDetail]);
 
 
-  const handleSelectLang = (langId) => {
-    setSelectedLang((prev) => (prev === langId ? null : langId));
-  };
+const handleSelectLang = (langId) => {
+  setSelectedLang((prev) => (prev === langId ? null : langId));
+  setLoaderKey(Date.now()); // trigger re-render of loader
+};
+
+  let percent=0;
+
+  if(Languages){
+
+  const currentLang = Languages.find((lang) => lang.id === selectedLang);
+  const firstMetric = currentLang?.metric?.[0];
+  percent = firstMetric?.used && firstMetric?.purchased
+    ? Math.round((firstMetric.used / firstMetric.purchased) * 100)
+    : 0;
+  }
+
+
 
   return (
     <div className="container">
@@ -38,9 +54,9 @@ const SubscriptionDashboard = () => {
       </div>
 
       <h1 className="title">
-  <img className="subscriptionimg" src="../assets/Subscription.png" alt="" />
-  Subscription Usage Overview
-</h1>
+        <img className="subscriptionimg" src="/assets/Subscription.png" alt="" />
+        Subscription Usage Overview
+      </h1>
 
       <div className="language-grid">
         {Languages && Languages.map((lang) => (
@@ -54,16 +70,14 @@ const SubscriptionDashboard = () => {
         ))}
       </div>
 
+
       {Languages && Languages
-        .filter((lang) => lang.id === selectedLang && lang.metrics)
+        .filter((lang) => lang.id === selectedLang && lang.metric)
         .map((lang) => (
           <div key={lang.id} className="subscription-card">
             <div className="subscription-header">{lang.icon} {lang.name} Subscription</div>
             <div className="metrics-row">
-              {lang.metrics.map((metric, idx) => {
-                const percent = metric.used && metric.purchased
-                  ? Math.round((metric.used / metric.purchased) * 100)
-                  : 0;
+              {lang.metric.map((metric, idx) => {
                 return (
                   <div className="metric-box" key={idx}>
                     <div className="metric-title">{metric.title}</div>
@@ -95,10 +109,15 @@ const SubscriptionDashboard = () => {
                         </div>
                       </div>
                     )}
+
                   </div>
                 );
               })}
+              <div class='metric-box-extra'>
+                <CircularProgress  key={loaderKey} percent={70} />
+              </div>
             </div>
+
           </div>
         ))}
 

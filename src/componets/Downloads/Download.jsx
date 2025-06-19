@@ -4,6 +4,7 @@ import { FiDownload, FiLoader } from "react-icons/fi";
 import "./Download.scss";
 import useUserStore from "../../../Zustand_State/UserStore";
 import useAuthStore from "../../../Zustand_State/AuthStore";
+import InfoTooltip from "../../ReusableComponents/InfoToolTip/InfoTooltip";
 
 const Download = () => {
   const { downloads, downloadsLoading, fetchDownloads, getAndDownloadFile } =
@@ -44,7 +45,12 @@ const Download = () => {
               {downloads.map((entry, idx) => (
                 <tr key={entry.filename + idx}>
                   <td>{entry.language}</td>
-                  <td>{entry.filename}</td>
+                  <td>{entry.filename}
+                    {entry.sub_file_details?.length > 0 && (
+                      <InfoTooltip details={entry.sub_file_details} />
+                    )}
+
+                  </td>
                   <td>{entry.file_size}</td>
                   <td>{entry.code_lines}</td>
                   <td style={{ display: "none" }}>{entry.file_id}</td>
@@ -56,7 +62,7 @@ const Download = () => {
                         disabled={downloadingId === entry.file_id}
                       >
                         {downloadingId === entry.file_id ? (
-                          <FiLoader  style={{ animation: "spin 1s linear infinite" }} />
+                          <FiLoader style={{ animation: "spin 1s linear infinite" }} />
                         ) : (
                           <FiDownload />
                         )}

@@ -63,8 +63,10 @@ const useAuthStore = create((set) => (
                 // });
                 toast.success("Logged in successfully");
             } catch (error) {
+                const errData = error.response?.data;
+                const errorMsg = errData?.error || errData?.message || "Failed Sign up";
+                toast.error(errorMsg);
                 set({ authUser: null, isChecking: false });
-                toast.error(error.response?.data?.message || "Failed Sign up");
             }
         },
 

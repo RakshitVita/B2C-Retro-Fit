@@ -10,6 +10,7 @@ import useAuthStore from "../Zustand_State/AuthStore";
 import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
 import SubscriptionDashboard from "./componets/SubscriptionDashboard/SubscriptionDashboard";
+import Dashboard from "./componets/SubscriptionPage/Dashboard";
 
 const App = () => {
   const { authUser, checkAuth, isChecking, isLoggingIn } = useAuthStore();
@@ -66,7 +67,8 @@ const AppRoutes = ({ authUser }) => {
         <Route path="/" element={<Mainpage />} />
         <Route path="/downloads" element={<Download />} />
         <Route path="/subscriptions" element={<Subscription_section />} />
-        <Route path="/SubscriptionDashboard" element={<SubscriptionDashboard/>}/>
+        <Route path="/SubscriptionDashboard" element={<Dashboard/>}/>
+        <Route path="/Demo" element={<SubscriptionDashboard/>}/>
       </Routes>
       {/* Show login popup only if NOT on home and NOT logged in */}
       {!authUser && !isHome && <LoginG asModal={true} onClose={handleLoginClose} />}

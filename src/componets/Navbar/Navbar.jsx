@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaChartBar, FaSignOutAlt } from "react-icons/fa"; // Import icons
 import "./Navbar.css";
 import useAuthStore from "../../../Zustand_State/AuthStore";
 
@@ -8,7 +8,6 @@ const Navbar = ({
   notifications = [],
   filenumber,
 }) => {
-
   const { authUser, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -63,7 +62,6 @@ const Navbar = ({
               )}
             </div>
           </div>
-
         }
         {/* Profile Dropdown */}
         <div className="profile-dropdown" ref={dropdownRef}>
@@ -80,15 +78,16 @@ const Navbar = ({
             className="dropdown-content"
             style={{ display: dropdownOpen ? "block" : "none" }}
           >
-            <button className="dropdown-btn"  onClick={() => {
-    setDropdownOpen(false);
-    navigate("/SubscriptionDashboard");
-  }}>
+            <button className="dropdown-btn" onClick={() => {
+              setDropdownOpen(false);
+              navigate("/SubscriptionDashboard");
+            }}>
+              <FaChartBar className="Uicon" /> {/* Icon for Check Usage */}
               Check Usage
             </button>
-            
+
             <button className="dropdown-btn logout-btn" onClick={logout}>
-            
+              <FaSignOutAlt className="Licon" /> {/* Icon for Logout */}
               Logout
             </button>
           </div>

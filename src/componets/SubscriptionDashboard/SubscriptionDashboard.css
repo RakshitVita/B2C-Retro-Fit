@@ -63,6 +63,8 @@
       border-radius: 10px;
       margin-bottom: 30px;
       overflow: hidden;
+      max-width: 800px;
+      margin: auto;
     }
  
     .subscription-header {
@@ -86,7 +88,17 @@
       padding: 20px;
       border-radius: 10px;
       background: #f7f5fe;
-      min-width: 280px;
+      max-width:477px;
+      margin: auto;
+    }
+    .metric-box-extra{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      background: #f7f5fe;
+      width:300px;
+      margin: auto;
     }
  
     .metric-title {

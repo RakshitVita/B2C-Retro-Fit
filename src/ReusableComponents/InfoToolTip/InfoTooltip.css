@@ -1,0 +1,34 @@
+.info-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+  .info-icon {
+    margin-left: 6px;
+    color: #888;
+  }
+
+  .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+  }
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+}
