@@ -3,7 +3,7 @@ import useAuthStore from "../Zustand_State/AuthStore"; // <-- add this import
 import toast from "react-hot-toast";
 
 export const axiosInstance=axios.create({
-    baseURL:import.meta.env.VITE_BACKEND_URL,
+    baseURL: `${import.meta.env.VITE_BACKEND_URL}/api/codetodoc`, // Append /api/codetodoc
     withCredentials:true,
 })
 

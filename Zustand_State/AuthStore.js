@@ -38,7 +38,7 @@ const useAuthStore = create((set) => (
         signup: async (data) => {
             set({ isLoggingIn: true });
             try {
-                const res = await axiosInstance.post("/auth/signup", { id_token: data });
+                const res = await axiosInstance.post("/signup", { id_token: data });
                 set({ authUser: res.data.user });
                 Cookies.set("access_token", res.data.access_token, {
                     path: "/",

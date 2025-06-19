@@ -49,7 +49,7 @@ const useUserStore = create((set) => ({
     const token = Cookies.get("access_token");
     const email = getEmailFromCookie();
     try {
-      const response = await axiosInstance.post('/api/user/status',
+      const response = await axiosInstance.post('/status',
         { email },
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -133,7 +133,7 @@ const useUserStore = create((set) => ({
 
     try {
       const response = await axiosInstance.post(
-        '/api/convert-file', formData,
+        '/convert-file', formData,
         {
           // responseType: 'blob',
           headers: token ? { Authorization: `Bearer ${token}` } : {},
