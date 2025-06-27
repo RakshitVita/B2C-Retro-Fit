@@ -19,7 +19,7 @@ const InfoTooltip = ({ details }) => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default InfoTooltip
