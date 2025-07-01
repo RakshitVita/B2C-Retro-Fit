@@ -19,7 +19,7 @@ const Mainpage = () => {
   const fileInputRef = useRef(null);
 
   const {
-    isPremium,
+    resetUserState,
     lineLimitError,
     setLineLimitError,
     convertFile,
@@ -46,6 +46,8 @@ const Mainpage = () => {
   // Reset state when user logs out or changes
   useEffect(() => {
   if(!authUser){
+    // resetUserState(); 
+    setTimeout(() => setFileType("python"), 0);
     setFileType("python");
     setFile(null);
     setShowLoginPopup(false);

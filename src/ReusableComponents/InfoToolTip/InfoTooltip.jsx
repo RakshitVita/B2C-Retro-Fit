@@ -1,25 +1,22 @@
 import React from "react";
-import { FiInfo } from "react-icons/fi";
-import "./InfoTooltip.css"; // Style as neede
+import "./InfoTooltip.css"; // Import your CSS for styling
 
-const InfoTooltip = ({ details }) => {
-  return (
- <div className="info-tooltip-wrapper">
-      <FiInfo className="info-icon" />
-      <div className="tooltip-text">
-        <ul>
-          {details.map((obj, idx) => {
-            const [file, msg] = Object.entries(obj)[0];
-            return (
-              <li key={idx}>
-                <strong>{file}</strong>: {msg}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+const InfoTooltip = ({ fileName, details }) => (
+  <div>
+    <div className="Heading">
+      {fileName}
     </div>
-  );
-};
+    <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+      {details.map((obj, idx) => {
+        const [file, msg] = Object.entries(obj)[0];
+        return (
+          <li key={idx} style={{ marginBottom: 6 }}>
+            <strong>{file}</strong>: {msg}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+);
 
-export default InfoTooltip
+export default InfoTooltip;

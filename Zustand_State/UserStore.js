@@ -80,46 +80,6 @@ const useUserStore = create((set) => ({
     }
   },
 
-  // validateFileUpload: async (file) => {
-  //   const state = useUserStore.getState();
-  //   const token = Cookies.get("access_token");
-  //   const email = getEmailFromCookie();
-  //   // Premium users skip validation
-  //   if (state.isPremium) {
-  //     set({ lineLimitError: '' });
-  //     return true;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-  //   formData.append('email', email || '');
-
-  //   try {
-  //     const response = await axiosInstance.post(
-  //       '/api/validate-file-lines',
-  //       formData,
-  //       {
-  //         headers: token ? { Authorization: `Bearer ${token}` } : {},
-  //       }
-  //     );
-
-
-  //     const { valid, message } = response.data;
-
-  //     if (!valid) {
-  //       set({ lineLimitError: message });
-  //       return false;
-  //     }
-
-  //     set({ lineLimitError: '' });
-  //     return true;
-  //   } catch (error) {
-  //     console.error("Validation failed", error);
-  //     set({ lineLimitError: 'Failed to validate file.' });
-  //     return false;
-  //   }
-  // },
-
   convertFile: async (file, language) => {
     set({ isLoading: true, error: null });
     //getting token from cookies
@@ -242,8 +202,8 @@ const useUserStore = create((set) => ({
 
   resetUserState: () => set({
     isPremium: false,
-    languages: ["python", "javascript"],
-    allowedLanguages: ["python","javascript"],
+    languages: ["python","javascript"],
+    allowedLanguages: ["python"],
     extensions: {
       "python": [".py", ".txt"],
       "JavaScript": [".js"]
