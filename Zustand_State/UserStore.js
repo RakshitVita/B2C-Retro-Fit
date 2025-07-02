@@ -13,7 +13,7 @@ function getEmailFromCookie() {
     return null;
   }
 }
-const useUserStore = create((set) => ({
+const useUserStore = create((set,get) => ({
 
   isPremium: false,
   languages: ["python", "javaScript"],
@@ -24,11 +24,12 @@ const useUserStore = create((set) => ({
   },
   isLoading: true,
   isDownloading: false,
-  isLoaSubscriction:false,
+  isLoaSubscriction: false,
   error: null,
   lineLimitError: '',
   conRedMessage: '',
   UserStatusLoading: false,
+  ValidAPiPayload: {},
 
 
   downloads: [], // <--- Make sure this is an array, not undefined
@@ -80,6 +81,33 @@ const useUserStore = create((set) => ({
     }
   },
 
+  validationCheck: async (file, language) => {
+    //getting token from cookies
+    const token = Cookies.get("access_token");
+    const formData = new FormData();
+    const email = getEmailFromCookie();
+
+    formData.append('file', file);
+    formData.append('language', language);
+    formData.append('email', email || ''); // Ensure email is always sent
+    try {
+      const response = await axiosInstance.post(
+        '/check_limit', formData,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      set({
+        ValidAPiPayload: response.data
+      })
+      return response.data;
+    } catch (error) {
+      console.error('Conversion failed:', error);
+      return null;
+    }
+  },
+
+
   convertFile: async (file, language) => {
     set({ isLoading: true, error: null });
     //getting token from cookies
@@ -89,17 +117,25 @@ const useUserStore = create((set) => ({
 
     formData.append('file', file);
     formData.append('language', language);
-    formData.append('email', email || ''); // Ensure email is always sent
+    formData.append('email', email || '');
 
+    // const updatedPayload = {
+    //   ...ValidAPiPayload,        // original API response
+    //   email: email || '',
+    //   language: language || '',
+    // };
+
+    // If you have an object (e.g., ValidAPiPayload), append its fields:
+    Object.entries(get().ValidAPiPayload).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
     try {
       const response = await axiosInstance.post(
         '/convert-file', formData,
         {
-          // responseType: 'blob',
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       );
-      // const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
 
       set({ conRedMessage: response.data.message, isLoading: false });
@@ -191,10 +227,10 @@ const useUserStore = create((set) => ({
           }
         }
       );
-      set({ Languages: response.data ,  isLoaSubscriction: false })
+      set({ Languages: response.data, isLoaSubscriction: false })
       console.log(response.data);
     } catch (error) {
-      set({ Languages: [''] , isLoaSubscriction: false })
+      set({ Languages: [''], isLoaSubscriction: false })
       console.error("Failed to Load", error);
       toast.error("Faild to Load Data");
     }
@@ -202,7 +238,7 @@ const useUserStore = create((set) => ({
 
   resetUserState: () => set({
     isPremium: false,
-    languages: ["python","javascript"],
+    languages: ["python", "javascript"],
     allowedLanguages: ["python"],
     extensions: {
       "python": [".py", ".txt"],

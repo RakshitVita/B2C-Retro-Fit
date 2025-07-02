@@ -6,6 +6,7 @@ import useAuthStore from '../../../Zustand_State/AuthStore.js';
 import LoginG from "../Google_Login/LoginG.jsx";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 let hasFetchedUserStatusGlobal = false;
 
@@ -18,8 +19,12 @@ const Mainpage = () => {
   const [formatError, setFormatError] = useState('');
   const fileInputRef = useRef(null);
 
+  //For DialogBox
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogData, setDialogData] = useState({ message: "", fileList: [] });
+
   const {
-    resetUserState,
+    validationCheck,
     lineLimitError,
     setLineLimitError,
     convertFile,
@@ -43,19 +48,19 @@ const Mainpage = () => {
     }
   }, [authUser, fetchUserStatus]);
 
-  // Reset state when user logs out or changes
+  // Reset state when user logs out or changesconvert
   useEffect(() => {
-  if(!authUser){
-    // resetUserState(); 
-    setTimeout(() => setFileType("python"), 0);
-    setFileType("python");
-    setFile(null);
-    setShowLoginPopup(false);
-    setLanguagelimiterror(false);
-    setFormatError('');
-    setLineLimitError('');
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  }
+    if (!authUser) {
+      // resetUserState(); 
+      setTimeout(() => setFileType("python"), 0);
+      setFileType("python");
+      setFile(null);
+      setShowLoginPopup(false);
+      setLanguagelimiterror(false);
+      setFormatError('');
+      setLineLimitError('');
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   }, [authUser, setLineLimitError])
 
   const handleGoToDownloads = () => {
@@ -112,7 +117,7 @@ const Mainpage = () => {
     if (!uploadedFile) return;
     setFile(uploadedFile);
 
-    setIsLoading(true);
+
     setLineLimitError('');
     const passedValidation = await processFileUpload(uploadedFile);
     if (!passedValidation) {
@@ -120,8 +125,52 @@ const Mainpage = () => {
       return;
     }
 
-    await convertFile(uploadedFile, fileType);
-    setIsLoading(false);
+
+
+
+    const res = await validationCheck(uploadedFile, fileType);
+
+    const messageHtml = `
+  <div style="margin-bottom: 10px;">
+    ${res?.message?.replace(/\n/g, "<br/>") || "Do you want to proceed?"}
+  </div>
+  <div style="
+    max-height: 150px;
+    overflow-y: auto;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    text-align: left;
+    border: 1px solid #ddd;
+  ">
+    <ul style="margin: 0; padding-left: 20px;">
+      ${res?.processing_files_list?.map(file => `<li>${file}</li>`).join('')}
+    </ul>
+  </div>
+`;
+
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      html: messageHtml,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
+
+
+    if (!result.isConfirmed) {
+      setIsLoading(false);
+      setFile(null);
+      return;
+    }
+
+    // setIsLoading(true);
+    try {
+      await convertFile(uploadedFile, fileType);
+    } finally {
+      setIsLoading(false);
+    }
 
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
