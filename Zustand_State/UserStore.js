@@ -37,6 +37,7 @@ const useUserStore = create((set,get) => ({
 
   setIsLoading: (value) => set({ isLoading: value }),
   setLineLimitError: (msg) => set({ lineLimitError: msg }),
+  setConRedMessage: (msg) => set({ conRedMessage: msg }),
 
   fetchUserStatus: async () => {
     set({
@@ -82,6 +83,7 @@ const useUserStore = create((set,get) => ({
   },
 
   validationCheck: async (file, language) => {
+    set({ isLoading: true });
     //getting token from cookies
     const token = Cookies.get("access_token");
     const formData = new FormData();
@@ -98,18 +100,19 @@ const useUserStore = create((set,get) => ({
         }
       );
       set({
-        ValidAPiPayload: response.data
+        ValidAPiPayload: response.data,isLoading: false,
       })
       return response.data;
     } catch (error) {
       console.error('Conversion failed:', error);
+      set({ isLoading: false});
       return null;
     }
   },
 
 
   convertFile: async (file, language) => {
-    set({ isLoading: true, error: null });
+    set({error: null });
     //getting token from cookies
     const token = Cookies.get("access_token");
     const formData = new FormData();
@@ -126,9 +129,9 @@ const useUserStore = create((set,get) => ({
     // };
 
     // If you have an object (e.g., ValidAPiPayload), append its fields:
-    Object.entries(get().ValidAPiPayload).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+    // Object.entries(get().ValidAPiPayload).forEach(([key, value]) => {
+    //   formData.append(key, value);
+    // });
     try {
       const response = await axiosInstance.post(
         '/convert-file', formData,
@@ -138,10 +141,11 @@ const useUserStore = create((set,get) => ({
       );
 
 
-      set({ conRedMessage: response.data.message, isLoading: false });
+      set({ conRedMessage: response.data.message });
+      return response.data;
     } catch (error) {
       console.error('Conversion failed:', error);
-      set({ error: 'File conversion failed', isLoading: false });
+      set({ error: 'File conversion failed'});
     }
   },
 

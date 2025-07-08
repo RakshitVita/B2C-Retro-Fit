@@ -7,6 +7,7 @@ import LoginG from "../Google_Login/LoginG.jsx";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 let hasFetchedUserStatusGlobal = false;
 
@@ -24,6 +25,7 @@ const Mainpage = () => {
   const [dialogData, setDialogData] = useState({ message: "", fileList: [] });
 
   const {
+    setConRedMessage,
     validationCheck,
     lineLimitError,
     setLineLimitError,
@@ -62,10 +64,6 @@ const Mainpage = () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }, [authUser, setLineLimitError])
-
-  const handleGoToDownloads = () => {
-    navigate("/downloads");
-  };
 
   const processFileUpload = async (file) => {
     setFormatError('');
@@ -113,6 +111,9 @@ const Mainpage = () => {
   };
 
   const handleFileChange = async (e) => {
+    // Reset conRedMessage at the start of a new upload
+    setConRedMessage(""); // <-- Add this line
+
     const uploadedFile = e.target.files[0];
     if (!uploadedFile) return;
     setFile(uploadedFile);
@@ -122,12 +123,9 @@ const Mainpage = () => {
     const passedValidation = await processFileUpload(uploadedFile);
     if (!passedValidation) {
       setIsLoading(false);
+      setConRedMessage(""); // <-- Reset here too
       return;
     }
-
-
-
-
     const res = await validationCheck(uploadedFile, fileType);
 
     const messageHtml = `
@@ -156,21 +154,27 @@ const Mainpage = () => {
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
+      didOpen: () => {
+        // Enable or disable the "Yes" button based on res.flag
+        const confirmBtn = Swal.getConfirmButton();
+        if (confirmBtn) {
+          confirmBtn.disabled = !res?.flag;
+        }
+      }
     });
 
 
     if (!result.isConfirmed) {
-      setIsLoading(false);
       setFile(null);
+      setConRedMessage(""); // <-- Reset here too
+      if (fileInputRef.current) fileInputRef.current.value = ""; // <-- Reset here
       return;
     }
 
     // setIsLoading(true);
-    try {
-      await convertFile(uploadedFile, fileType);
-    } finally {
-      setIsLoading(false);
-    }
+
+    await convertFile(uploadedFile, fileType);
+
 
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -302,22 +306,18 @@ const Mainpage = () => {
                   &nbsp; Processing...
                 </>
               ) : conRedMessage ? (
-                <>
-                  <span style={{ color: "#0b3d91", fontWeight: "bold" }}>{conRedMessage}</span>
-                  <button
-                    className="arrow-btn"
-                    onClick={handleGoToDownloads}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      marginLeft: "10px",
-                    }}
-                    title="Go to Downloads"
-                  >
-                    <FaArrowRight size={24} color="#0b3d91" />
-                  </button>
-                </>
+                (() => {
+                  // Show toast and navigate only once
+                  if (!window.__hasNavigatedToDownloads) {
+                    window.__hasNavigatedToDownloads = true;
+                    toast.success(conRedMessage || "File converted successfully!");
+                    setTimeout(() => {
+                      navigate("/downloads");
+                      window.__hasNavigatedToDownloads = false;
+                    }, 1200); // Delay for user to see the toast
+                  }
+                  return null;
+                })()
               ) : null}
             </span>
           </div>
